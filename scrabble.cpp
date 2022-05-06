@@ -9,7 +9,7 @@
 
 void printMenu();
 void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2);
-void loadGame();
+void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2);
 void credit();
 void playGame(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2, std::vector<std::vector<std::string>> board);
 void printBoard(std::vector<std::vector<std::string>> board);
@@ -46,7 +46,7 @@ int main(void) {
          newGame(player1, player2);
       }
       else if (option == 2) {
-         loadGame();
+         loadGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2);
       }
       else if (option == 3) {
          credit();
@@ -117,7 +117,7 @@ void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> 
 
 
 }
-void loadGame() {
+void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2) {
 
 }
 void credit() {
