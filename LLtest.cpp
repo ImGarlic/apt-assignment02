@@ -27,17 +27,37 @@ LinkedList* createTileBag() {
    for(Tile* i : tiles) {
       tileBag->append(i);
    }
-
    return tileBag;
 }
 
+LinkedList* createHand(LinkedList* tileBag) {
+    LinkedList* hand = new LinkedList();
+    Tile* tile;
+
+    for(int i = 0; i < 7; ++i) {
+      tile = tileBag->pop();
+      hand->append(tile);
+    }
+    return hand;
+}
+
+void replaceTile(LinkedList* tileBag, LinkedList* hand, Letter letter) {
+    Tile* tile = hand->remove(letter);
+    if(tile == NULL) {
+        return;
+    }
+    tileBag->append(tile);
+    tile = tileBag->pop();
+    hand->append(tile);
+}
+
 int main(void) {
-    LinkedList* list = new LinkedList();
-    list->print();
-    list = createTileBag();
-    Tile* t = list->pop();
-    std::cout << "Popped " << t->letter << "-" << t->value << std::endl;
-    list->print();
-    delete t;
-    delete list;
+    LinkedList* tileBag = createTileBag();
+    LinkedList* hand = createHand(tileBag);
+    Letter e = 'E';
+    hand->print();
+    replaceTile(tileBag, hand, e);
+    hand->print();
+
+    delete tileBag;
 }

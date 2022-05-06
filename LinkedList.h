@@ -19,6 +19,9 @@ public:
    // Remove first node from list and return tile
    Tile* pop();
 
+   // Removes the first node containing the specified letter
+   Tile* remove(Letter letter);
+
 private:
    Node* head;
 };

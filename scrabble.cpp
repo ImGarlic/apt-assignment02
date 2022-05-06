@@ -17,9 +17,9 @@ void credit();
 void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr);
 void printBoard(std::vector<std::vector<std::string>>* board);
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2);
-void printHand();
+void printHand(LinkedList* hand);
 void placeTile();
-void replaceTile();
+void replaceTile(LinkedList* tileBag, LinkedList* hand, Letter letter);
 LinkedList* createTileBag();
 
 
@@ -86,7 +86,7 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
    }
    printNameAndScore(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2);
    printBoard(boardPtr);
-   printHand();
+   // printHand();
    std::cout << std::endl;
    while (curOption != "Quit" && curOption != "place Done" && curOption != "pass") {
       std::cout << "> ";
@@ -94,26 +94,32 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       if (curOption.find("place") != std::string::npos) {
          placeTile();
       }
-      else if (curOption.find("replace") != std::string::npos)
-         replaceTile();
+      else if (curOption.find("replace") != std::string::npos) {
+         // replaceTile();
       }
-      
+   }
    // if (curOption == "Quit") {
    //    exit;
    // }
 
    }
 
-void replaceTile() {
-
+void replaceTile(LinkedList* tileBag, LinkedList* hand, Letter letter) {
+    Tile* tile = hand->remove(letter);
+    if(tile == NULL) {
+        return;
+    }
+    tileBag->append(tile);
+    tile = tileBag->pop();
+    hand->append(tile);
 }
 
 void placeTile() {
 
 }
 
-void printHand() {
-
+void printHand(LinkedList* hand) {
+   hand->print();
 }
 
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2) {

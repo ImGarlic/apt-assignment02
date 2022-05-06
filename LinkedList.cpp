@@ -65,9 +65,32 @@ Tile* LinkedList::pop() {
    if(head == nullptr) {
       return NULL;
    }
-   // Assign head to next node and return removed node
+   // Assign head to next node and return removed tile
    Tile* tile = head->tile;
    head = head->next;
-
    return tile;
+}
+
+Tile* LinkedList::remove(Letter letter) {
+   Node* curNode = head;
+   Node* temp;
+   int count = 0;
+   // Base case, list is empty
+   if(head == nullptr) {
+      return NULL;
+   }
+   // Traverse and search for letter
+   while(curNode->next != NULL) {
+      if(curNode->next->tile->letter == letter) {
+         // Letter found, delete node
+         count += 2;
+         std::cout << "Removed " << curNode->next->tile->letter << "-" << curNode->next->tile->value << " at position " << count << std::endl;
+         temp = curNode->next;
+         curNode->next = temp->next;
+         return temp->tile;
+      }
+      curNode = curNode->next;
+      count += 1;
+   }
+   return NULL;
 }
