@@ -14,6 +14,10 @@ void credit();
 void playGame(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2, std::vector<std::vector<std::string>> board);
 void printBoard(std::vector<std::vector<std::string>> board);
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2);
+void printHand();
+void placeTile();
+void replaceTile();
+
 
 int main(void) {
    LinkedList* list = new LinkedList();
@@ -63,16 +67,52 @@ int main(void) {
 }
 
 void playGame(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2, std::vector<std::vector<std::string>> board) {
+   std::string curOption = "";
+
    if (curPlayer == "") {
       curPlayer = player1;
    }
+   else if (curPlayer == player1) {
+      curPlayer = player2;
+   }
+   else {
+      curPlayer = player1;
+   }
+
    printNameAndScore(player1, player2, curPlayer, scorePlayer1, scorePlayer2);
    printBoard(board);
+   printHand();
+   std::cout << std::endl;
+   while (curOption != "Quit" && curOption != "place Done" && curOption != "pass") {
+      std::cout << "> ";
+      std::cin >> curOption;
+      if (curOption.find("place") != std::string::npos) {
+         placeTile();
+      }
+      else if (curOption.find("replace") != std::string::npos)
+         replaceTile();
+      }
+      
+   // if (curOption == "Quit") {
+   //    exit;
+   // }
 
    }
 
+void replaceTile() {
+
+}
+
+void placeTile() {
+
+}
+
+void printHand() {
+
+}
+
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2) {
-   std::cout << curPlayer << " it's your turn" << std::endl;
+   std::cout << curPlayer << ", it's your turn" << std::endl;
    std::cout << "Score for " << player1 << ": " << scorePlayer1 << std::endl;
    std::cout << "Score for " << player2 << ": " << scorePlayer2 << std::endl;
 }
