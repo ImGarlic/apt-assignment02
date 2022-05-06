@@ -11,8 +11,8 @@ void printMenu();
 void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2);
 void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2);
 void credit();
-void playGame(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2, std::vector<std::vector<std::string>> board);
-void printBoard(std::vector<std::vector<std::string>> board);
+void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr);
+void printBoard(std::vector<std::vector<std::string>>* board);
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2);
 void printHand();
 void placeTile();
@@ -36,6 +36,8 @@ int main(void) {
    std::shared_ptr<int> scorePlayer2 = std::make_shared<int>(0);
    // A 2D Vector that will serve as the board
    std::vector<std::vector<std::string>> board(15,std::vector<std::string>(15, " "));
+   // std::shared_ptr<std::vector<std::vector<std::string>>> board = std::make_shared<std::vector<std::vector<std::string>>>(15,std::vector<std::string>(15, " "));
+   std::vector<std::vector<std::string>> *boardPtr = &board;
 
    do {
       std::cout << "Welcome to Scrabble!" << std::endl;
@@ -61,26 +63,25 @@ int main(void) {
       }
    } while ( option != 1 && option != 2);
 
-   playGame(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2, board);
+   playGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2, boardPtr);
 
    return EXIT_SUCCESS;
 }
 
-void playGame(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2, std::vector<std::vector<std::string>> board) {
+void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr) {
    std::string curOption = "";
 
-   if (curPlayer == "") {
-      curPlayer = player1;
+   if (*curPlayer == "") {
+      *curPlayer = *player1;
    }
-   else if (curPlayer == player1) {
-      curPlayer = player2;
+   else if (*curPlayer == *player1) {
+      *curPlayer = *player2;
    }
    else {
-      curPlayer = player1;
+      *curPlayer = *player1;
    }
-
-   printNameAndScore(player1, player2, curPlayer, scorePlayer1, scorePlayer2);
-   printBoard(board);
+   printNameAndScore(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2);
+   printBoard(boardPtr);
    printHand();
    std::cout << std::endl;
    while (curOption != "Quit" && curOption != "place Done" && curOption != "pass") {
@@ -117,14 +118,14 @@ void printNameAndScore(std::string player1, std::string player2, std::string cur
    std::cout << "Score for " << player2 << ": " << scorePlayer2 << std::endl;
 }
 
-void printBoard(std::vector<std::vector<std::string>> board) {
+void printBoard(std::vector<std::vector<std::string>>* boardPtr) {
    std::cout << "    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  " << std::endl;
    std::cout << "  -------------------------------------------------------------" << std::endl;
    char a = 'A';
    for (int i = 0; i < 15; i++){
       std::cout << a << " |";
       for (int j = 0; j < 15; j++) {
-         std::cout << " " << board[i][j] << " |";
+         std::cout << " " << boardPtr->at(i).at(j) << " |";
       }
       std::cout << std::endl;
       a++;
