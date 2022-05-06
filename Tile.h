@@ -13,6 +13,7 @@ public:
 
    Tile(Letter letter, Value value);
    Tile(Tile& other);
+   ~Tile();
 
    Letter letter;
    Value  value;

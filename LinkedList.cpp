@@ -4,21 +4,43 @@
 
 LinkedList::LinkedList() {
    head = nullptr;
-
-   // TODO
 }
 
 LinkedList::~LinkedList() {
+   Node* curNode = head;
+   Node* temp;
+   // Base case, list empty
+   if(head == nullptr) {
+      return;
+   }
+   // Delete nodes one by one
+   while(curNode->next != NULL) {
+      temp = curNode;
+      curNode = curNode->next;
+      delete temp;
+   }
+   delete curNode;
 }
 
 void LinkedList::print() {
    Node* curNode = head;
+   int count = 0;
    std::cout << "Your hand is" << std::endl;
+   // Base case, list is empty
+   if(head == nullptr) {
+      std::cout << "empty lol" << std::endl;
+      return;
+   }
+   // Traverse and print all nodes
    while(curNode->next != NULL) {
       std::cout << curNode->tile->letter << "-" << curNode->tile->value << ", ";
       curNode = curNode->next;
+      count += 1;
    }
+   // Final node node counted, so add to count and print node
+   count += 1;
    std::cout << curNode->tile->letter << "-" << curNode->tile->value << std::endl;
+   std::cout << count << std::endl;
 }
 
 void LinkedList::append(Tile* tile) {

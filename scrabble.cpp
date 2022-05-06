@@ -2,8 +2,11 @@
 // ./main
 #include "LinkedList.h"
 #include <iostream>
+#include <fstream>
 #include <memory>
 #include <vector>
+#include <algorithm>
+#include <random>
 
 #define EXIT_SUCCESS    0
 
@@ -14,6 +17,7 @@ void credit();
 void playGame(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2, std::vector<std::vector<std::string>> board);
 void printBoard(std::vector<std::vector<std::string>> board);
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2);
+LinkedList* createTileBag();
 
 int main(void) {
    LinkedList* list = new LinkedList();
@@ -72,7 +76,7 @@ void playGame(std::string player1, std::string player2, std::string curPlayer, i
    }
 
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2) {
-   std::cout << curPlayer << " it's your turn" << std::endl;
+   std::cout << curPlayer << ", it's your turn" << std::endl;
    std::cout << "Score for " << player1 << ": " << scorePlayer1 << std::endl;
    std::cout << "Score for " << player2 << ": " << scorePlayer2 << std::endl;
 }
@@ -120,6 +124,31 @@ void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> 
 void loadGame() {
 
 }
+
+LinkedList* createTileBag() {
+   LinkedList* tileBag = new LinkedList();
+   std::vector<Tile*> tiles;
+   Letter letter;
+   Value value;
+
+   // Read file into vector
+   std::ifstream file("ScrabbleTiles.txt");
+   while(file >> letter >> value) {
+      tiles.push_back(new Tile(letter, value));
+   }
+   // Shuffle bag 
+   std::random_device rd; 
+   auto rng = std::default_random_engine { rd() };
+   std::shuffle(std::begin(tiles), std::end(tiles), rng);
+
+   // Turn vector into linked list
+   for(Tile* i : tiles) {
+      tileBag->append(i);
+   }
+
+   return tileBag;
+}
+
 void credit() {
    std::cout << "----------------------------------" << std::endl;
    std::cout << "Name: Alex Ly" << std::endl;

@@ -10,3 +10,7 @@ Tile::Tile(Tile& other) {
     this->letter = other.letter;
     this->value = other.value;
 }
+
+Tile::~Tile() {
+
+}
