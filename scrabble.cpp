@@ -20,7 +20,7 @@ int main(void) {
    std::unique_ptr<std::string> name1 = std::make_unique<std::string>("name1");
    std::unique_ptr<std::string> name2 = std::make_unique<std::string>("name2");
    
-   while ((option != 1) || (option != 2)) {
+   do {
       std::cout << "Welcome to Scrabble!" << std::endl;
       std::cout << "--------------------" << std::endl;
       std::cout << std::endl;
@@ -42,7 +42,7 @@ int main(void) {
          std::cout << "Goodbye" << std::endl;
          return EXIT_SUCCESS;
       }
-   }
+   } while ( option != 1 && option != 2);
 
 
 
@@ -72,6 +72,8 @@ void newGame(std::string name1, std::string name2) {
    std::cin >> name2;
    std::cout << std::endl;
    std::cout << "Let's Play!" << std::endl;
+
+
 }
 void loadGame() {
 
