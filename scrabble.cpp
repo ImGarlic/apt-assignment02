@@ -17,14 +17,11 @@ void credit();
 void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr);
 void printBoard(std::vector<std::vector<std::string>>* board);
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2);
-<<<<<<< HEAD
-LinkedList* createTileBag();
-=======
 void printHand();
 void placeTile();
 void replaceTile();
+LinkedList* createTileBag();
 
->>>>>>> eeebc846d37e17bd4d621b282317f1c1f3d7810e
 
 int main(void) {
    LinkedList* list = new LinkedList();
