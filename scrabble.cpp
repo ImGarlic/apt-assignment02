@@ -7,7 +7,7 @@
 #define EXIT_SUCCESS    0
 
 void printMenu();
-void newGame();
+void newGame(std::string name1, std::string name2);
 void loadGame();
 void credit();
 
@@ -17,9 +17,10 @@ int main(void) {
    delete list;
 
    int option = 0;
-   std::unique_ptr<std::string> studentName1 = std::make_unique<std::string>("Name1");
+   std::unique_ptr<std::string> name1 = std::make_unique<std::string>("name1");
+   std::unique_ptr<std::string> name2 = std::make_unique<std::string>("name2");
    
-   while (option != 1 || option != 2) {
+   while ((option != 1) || (option != 2)) {
       std::cout << "Welcome to Scrabble!" << std::endl;
       std::cout << "--------------------" << std::endl;
       std::cout << std::endl;
@@ -29,7 +30,7 @@ int main(void) {
       std::cout << std::endl;
 
       if (option == 1) {
-         newGame();
+         newGame(*name1, *name2);
       }
       else if (option == 2) {
          loadGame();
@@ -59,8 +60,18 @@ void printMenu() {
 
 }
 
-void newGame() {
-
+void newGame(std::string name1, std::string name2) {
+   std::cout << "Starting a New Game" << std::endl;
+   std::cout << std::endl;
+   std::cout << "Enter a name for player 1 (uppercase characters only)" << std::endl;
+   std::cout << "> ";
+   std::cin >> name1;
+   std::cout << std::endl;
+   std::cout << "Enter a name for player 2 (uppercase characters only)" << std::endl;
+   std::cout << "> ";
+   std::cin >> name2;
+   std::cout << std::endl;
+   std::cout << "Let's Play!" << std::endl;
 }
 void loadGame() {
 
