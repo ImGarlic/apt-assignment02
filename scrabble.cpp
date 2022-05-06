@@ -19,27 +19,28 @@ int main(void) {
    int option = 0;
    std::unique_ptr<std::string> studentName1 = std::make_unique<std::string>("Name1");
    
+   while (option != 1 || option != 2) {
+      std::cout << "Welcome to Scrabble!" << std::endl;
+      std::cout << "--------------------" << std::endl;
+      std::cout << std::endl;
+      printMenu();
+      std::cout << "> ";
+      std::cin >> option;
+      std::cout << std::endl;
 
-   std::cout << "Welcome to Scrabble!" << std::endl;
-   std::cout << "--------------------" << std::endl;
-   std::cout << std::endl;
-   printMenu();
-   std::cout << "> ";
-   std::cin >> option;
-   std::cout << std::endl;
-
-   if (option == 1) {
-      newGame();
-   }
-   else if (option == 2) {
-      loadGame();
-   }
-   else if (option == 3) {
-      credit();
-   }
-   else if (option == 4){
-      std::cout << "Goodbye" << std::endl;
-      return EXIT_SUCCESS;
+      if (option == 1) {
+         newGame();
+      }
+      else if (option == 2) {
+         loadGame();
+      }
+      else if (option == 3) {
+         credit();
+      }
+      else if (option == 4){
+         std::cout << "Goodbye" << std::endl;
+         return EXIT_SUCCESS;
+      }
    }
 
 
