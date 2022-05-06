@@ -8,7 +8,7 @@
 #define EXIT_SUCCESS    0
 
 void printMenu();
-void newGame(std::string player1, std::string player2);
+void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2);
 void loadGame();
 void credit();
 void playGame(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2, std::vector<std::vector<std::string>> board);
@@ -20,18 +20,16 @@ int main(void) {
    delete list;
 
    int option = 0;
-   // // Name for player 1
-   // std::unique_ptr<std::string> player1 = std::make_unique<std::string>("player1");
-   // // Name for player 2
-   // std::unique_ptr<std::string> player2 = std::make_unique<std::string>("player2");
-   std::unique_ptr<std::string> player1(new std::string("player1"));
-   std::unique_ptr<std::string> player2(new std::string("player1"));
+   // Name for player 1
+   std::shared_ptr<std::string> player1 = std::make_shared<std::string>("player1");
+   // Name for player 2
+   std::shared_ptr<std::string> player2 = std::make_shared<std::string>("player2");
    // Current player
-   std::unique_ptr<std::string> curPlayer = std::make_unique<std::string>("");
+   std::shared_ptr<std::string> curPlayer = std::make_shared<std::string>("");
    // Score for player 1
-   std::unique_ptr<int> scorePlayer1 = std::make_unique<int>(0);
+   std::shared_ptr<int> scorePlayer1 = std::make_shared<int>(0);
    // Score for player 2
-   std::unique_ptr<int> scorePlayer2 = std::make_unique<int>(0);
+   std::shared_ptr<int> scorePlayer2 = std::make_shared<int>(0);
    // A 2D Vector that will serve as the board
    std::vector<std::vector<std::string>> board(15,std::vector<std::string>(15, " "));
 
@@ -45,7 +43,7 @@ int main(void) {
       std::cout << std::endl;
 
       if (option == 1) {
-         newGame(*player1, *player2);
+         newGame(player1, player2);
       }
       else if (option == 2) {
          loadGame();
@@ -59,7 +57,6 @@ int main(void) {
       }
    } while ( option != 1 && option != 2);
 
-   std::cout << *player1 << ", " << *player2 << std::endl;
    playGame(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2, board);
 
    return EXIT_SUCCESS;
@@ -104,16 +101,16 @@ void printMenu() {
 
 }
 
-void newGame(std::string player1, std::string player2) {
+void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2) {
    std::cout << "Starting a New Game" << std::endl;
    std::cout << std::endl;
    std::cout << "Enter a name for player 1 (uppercase characters only)" << std::endl;
    std::cout << "> ";
-   std::cin >> player1;
+   std::cin >> *player1;
    std::cout << std::endl;
    std::cout << "Enter a name for player 2 (uppercase characters only)" << std::endl;
    std::cout << "> ";
-   std::cin >> player2;
+   std::cin >> *player2;
    std::cout << std::endl;
    std::cout << "Let's Play!" << std::endl;
    std::cout << std::endl;
