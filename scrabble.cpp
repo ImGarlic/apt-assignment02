@@ -1,6 +1,7 @@
 // g++ -Wall -Werror -std=c++14 -g -O -o main Tile.cpp Node.cpp LinkedList.cpp scrabble.cpp
 // ./main
 
+
 #include "LinkedList.h"
 #include <iostream>
 #include <fstream>
