@@ -86,7 +86,7 @@ Tile* LinkedList::pop() {
 
 Tile* LinkedList::remove(Letter letter) {
    Node* curNode = head;
-   Node* prevNode;
+   Node* prevNode = curNode;
    Tile* tile;
 
    // Base case, list is empty

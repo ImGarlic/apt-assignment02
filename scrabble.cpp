@@ -118,6 +118,8 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       while (curOption != "place Done" && curOption != "pass" && curOption != "replace" && curOption != "Quit") {
          if (curOption.find("place") != std::string::npos) {
             placeTile(curOption[6], curOption[11],curOption[12], boardPtr);
+            curHand->remove(curOption[6]);
+            curHand->append(tileBag->pop());
             std::cout << "> ";
             std::getline(std::cin, curOption);
          }
