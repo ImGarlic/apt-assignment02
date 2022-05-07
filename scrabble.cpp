@@ -110,6 +110,7 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       std::cout << "> ";
       std::cin.clear();
       std::cin.sync();
+      std::cin.ignore();
       std::getline(std::cin, curOption);
 
       while (curOption != "place Done" && curOption != "pass" && curOption != "replace") {
