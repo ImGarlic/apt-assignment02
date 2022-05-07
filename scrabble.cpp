@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include <unordered_map>
 
 #define EXIT_SUCCESS    0
 
@@ -14,18 +15,21 @@ void printMenu();
 void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2);
 void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2);
 void credit();
-void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr);
+void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag);
 void printBoard(std::vector<std::vector<std::string>>* board);
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2);
 void printHand(LinkedList* hand);
-void placeTile();
+void placeTile(char replaceLetter,char letter, char number, std::vector<std::vector<std::string>>* boardPtr);
 void replaceTile(LinkedList* tileBag, LinkedList* hand, Letter letter);
+void calculateScore();
 LinkedList* createTileBag();
+LinkedList* createHand(LinkedList* tileBag);
 
 
 int main(void) {
-   LinkedList* list = new LinkedList();
-   delete list;
+   LinkedList* tileBag = createTileBag();
+   LinkedList* player1Hand = createHand(tileBag);
+   LinkedList* player2Hand = createHand(tileBag);
 
    int option = 0;
    // Name for player 1
@@ -67,59 +71,85 @@ int main(void) {
       }
    } while ( option != 1 && option != 2);
 
-   playGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2, boardPtr);
+   playGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2, boardPtr, player1Hand, player2Hand, tileBag);
 
    return EXIT_SUCCESS;
 }
 
-void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr) {
+void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag) {
    std::string curOption = "";
+   LinkedList *curHand;
 
-   if (*curPlayer == "") {
-      *curPlayer = *player1;
-   }
-   else if (*curPlayer == *player1) {
-      *curPlayer = *player2;
-   }
-   else {
-      *curPlayer = *player1;
-   }
-   printNameAndScore(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2);
-   printBoard(boardPtr);
-   // printHand();
-   std::cout << std::endl;
-   while (curOption != "Quit" && curOption != "place Done" && curOption != "pass") {
+   while (curOption != "Quit") {
+
+      if (*curPlayer == "") {
+         *curPlayer = *player1;
+         curHand = player1Hand;
+      }
+      else if (*curPlayer == *player1) {
+         *curPlayer = *player2;
+         curHand = player2Hand;
+      }
+      else {
+         *curPlayer = *player1;
+         curHand = player1Hand;
+      }
+
+      printNameAndScore(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2);
+      printBoard(boardPtr);
+      std::cout << std::endl;
+      if (*curPlayer == *player1) {
+         printHand(player1Hand);
+      }
+      else {
+         printHand(player2Hand);
+      }
+
       std::cout << "> ";
-      std::cin >> curOption;
-      if (curOption.find("place") != std::string::npos) {
-         placeTile();
-      }
-      else if (curOption.find("replace") != std::string::npos) {
-         // replaceTile();
+      std::cin.clear();
+      std::getline(std::cin, curOption);
+
+      while (curOption != "place Done" && curOption != "pass" && curOption != "replace") {
+         if (curOption.find("place") != std::string::npos) {
+            std::cout <<curOption << std::endl;
+            placeTile(curOption[8], curOption[12],curOption[13], boardPtr);
+            std::getline(std::cin, curOption);
+         }
+
+         else if (curOption.find("replace") != std::string::npos) {
+            replaceTile(tileBag, curHand, curOption[8]);
+            break;
+         }
       }
    }
-   // if (curOption == "Quit") {
-   //    exit;
-   // }
 
    }
 
 void replaceTile(LinkedList* tileBag, LinkedList* hand, Letter letter) {
-    Tile* tile = hand->remove(letter);
-    if(tile == NULL) {
-        return;
-    }
-    tileBag->append(tile);
-    tile = tileBag->pop();
-    hand->append(tile);
+   Tile* tile = hand->remove(letter);
+   if(tile == NULL) {
+      return;
+   }
+   tileBag->append(tile);
+   tile = tileBag->pop();
+   hand->append(tile);
 }
 
-void placeTile() {
+void placeTile(char replaceLetter, char letter, char number, std::vector<std::vector<std::string>>* boardPtr) {
+   std::unordered_map<char, int> alphabet = {{'A', 0}, {'B', 1}, {'C', 2}, {'D', 3}, {'E', 4}, {'F', 5}, {'G', 6}, {'H', 7}, {'I', 8}, {'J', 9}, {'K', 10}, {'L', 11}, {'M', 12}, {'N', 13}, {'O', 14}};
+   int row = alphabet[letter];
+   int col = number;
+   boardPtr->at(row).at(col) = replaceLetter;
+   std::cout << "Test" << std::endl;
+}
+
+void calculateScore() {
 
 }
 
 void printHand(LinkedList* hand) {
    hand->print();
+   std::cout << std::endl;
 }
 
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2) {
@@ -194,6 +224,17 @@ LinkedList* createTileBag() {
    }
 
    return tileBag;
+}
+
+LinkedList* createHand(LinkedList* tileBag) {
+    LinkedList* hand = new LinkedList();
+    Tile* tile;
+
+    for(int i = 0; i < 7; ++i) {
+      tile = tileBag->pop();
+      hand->append(tile);
+    }
+    return hand;
 }
 
 void credit() {
