@@ -1,3 +1,4 @@
+
 // g++ -Wall -Werror -std=c++14 -g -O -o main Tile.cpp Node.cpp LinkedList.cpp scrabble.cpp
 // ./main
 
@@ -75,7 +76,7 @@ int main(void) {
    } while ( option != 1 && option != 2);
 
    playGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2, boardPtr, player1Hand, player2Hand, tileBag);
-
+   std::cout << "Goodbye" << std::endl;
    return EXIT_SUCCESS;
 }
 
@@ -114,10 +115,10 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       std::cin.sync();
       std::getline(std::cin, curOption);
 
-      while (curOption != "place Done" && curOption != "pass" && curOption != "replace") {
+      while (curOption != "place Done" && curOption != "pass" && curOption != "replace" && curOption != "Quit") {
          if (curOption.find("place") != std::string::npos) {
-            std::cout <<curOption << std::endl;
             placeTile(curOption[6], curOption[11],curOption[12], boardPtr);
+            std::cout << "> ";
             std::getline(std::cin, curOption);
          }
 
@@ -147,14 +148,11 @@ void replaceTile(LinkedList* tileBag, LinkedList* hand, Letter letter) {
 }
 
 void placeTile(char replaceLetter, char letter, char number, std::vector<std::vector<std::string>>* boardPtr) {
-   std::cout << letter << ", "  << number << ", " << replaceLetter << std::endl;
    std::unordered_map<char, int> alphabet = {{'A', 0}, {'B', 1}, {'C', 2}, {'D', 3}, {'E', 4}, {'F', 5}, {'G', 6}, {'H', 7}, {'I', 8}, {'J', 9}, {'K', 10}, {'L', 11}, {'M', 12}, {'N', 13}, {'O', 14}};
    const char* num = &number;
    int row = alphabet[letter];
    int col = std::atoi(num);
-   std::cout << row << ", " << col << ", " << replaceLetter << std::endl;
    boardPtr->at(row).at(col) = replaceLetter;
-   std::cout << "placed Tile" << std::endl;
 }
 
 void calculateScore() {
