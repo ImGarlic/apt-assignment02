@@ -207,6 +207,38 @@ void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
 
 }
 
+void saveGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag) {
+   std::ofstream saveFile("saveState.txt");
+   Tile* tile;
+
+   // Write player 1 name and score
+   saveFile << *player1 << std::endl;
+   saveFile << *scorePlayer1 << std::endl;
+   // Write player1 hand
+   while(true) {
+      tile = player1Hand->pop();
+      // Check for last tile
+      if(player1Hand->peak() == NULL) {
+         saveFile << tile->letter << "-" << tile->value << std::endl;
+         return;
+      }
+      saveFile << tile->letter << "-" << tile->value << ", ";
+   }
+   // Write player2 name and score
+   saveFile << *player2 << std::endl;
+   saveFile << *scorePlayer2 << std::endl;
+   // Write player2 hand
+   while(true) {
+      tile = player2Hand->pop();
+      // Check for last tile
+      if(player2Hand->peak() == NULL) {
+         saveFile << tile->letter << "-" << tile->value << std::endl;
+         return;
+      }
+      saveFile << tile->letter << "-" << tile->value << ", ";
+   }
+}
+
 LinkedList* createTileBag() {
    LinkedList* tileBag = new LinkedList();
    std::vector<Tile*> tiles;

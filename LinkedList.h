@@ -22,6 +22,9 @@ public:
    // Removes the first node containing the specified letter
    Tile* remove(Letter letter);
 
+   // Checks the top of the list
+   Tile* peak();
+
 private:
    Node* head;
 };
