@@ -107,12 +107,13 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
 
       std::cout << "> ";
       std::cin.clear();
+      std::cin.sync();
       std::getline(std::cin, curOption);
 
       while (curOption != "place Done" && curOption != "pass" && curOption != "replace") {
          if (curOption.find("place") != std::string::npos) {
             std::cout <<curOption << std::endl;
-            placeTile(curOption[8], curOption[12],curOption[13], boardPtr);
+            placeTile(curOption[6], curOption[11],curOption[12], boardPtr);
             std::getline(std::cin, curOption);
          }
 
@@ -136,11 +137,14 @@ void replaceTile(LinkedList* tileBag, LinkedList* hand, Letter letter) {
 }
 
 void placeTile(char replaceLetter, char letter, char number, std::vector<std::vector<std::string>>* boardPtr) {
+   std::cout << letter << ", "  << number << ", " << replaceLetter << std::endl;
    std::unordered_map<char, int> alphabet = {{'A', 0}, {'B', 1}, {'C', 2}, {'D', 3}, {'E', 4}, {'F', 5}, {'G', 6}, {'H', 7}, {'I', 8}, {'J', 9}, {'K', 10}, {'L', 11}, {'M', 12}, {'N', 13}, {'O', 14}};
+   const char* num = &number;
    int row = alphabet[letter];
-   int col = number;
+   int col = std::atoi(num);
+   std::cout << row << ", " << col << ", " << replaceLetter << std::endl;
    boardPtr->at(row).at(col) = replaceLetter;
-   std::cout << "Test" << std::endl;
+   std::cout << "placed Tile" << std::endl;
 }
 
 void calculateScore() {
