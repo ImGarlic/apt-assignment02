@@ -1,6 +1,7 @@
 
 #include "LinkedList.h"
 #include <iostream>
+#include <vector>
 
 LinkedList::LinkedList() {
    head = nullptr;
@@ -93,4 +94,8 @@ Tile* LinkedList::remove(Letter letter) {
       count += 1;
    }
    return NULL;
+}
+
+Tile* LinkedList::peak() {
+   return this->head->tile;
 }
