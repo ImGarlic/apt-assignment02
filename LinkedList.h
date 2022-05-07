@@ -9,6 +9,7 @@ public:
 
    LinkedList();
    ~LinkedList();
+   LinkedList(LinkedList& other);
 
    // Print out all nodes
    void print();

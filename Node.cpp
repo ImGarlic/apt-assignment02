@@ -14,5 +14,5 @@ Node::Node(Node& other)
 }
 
 Node::~Node() {
-   delete tile;
+   delete this->tile;
 }

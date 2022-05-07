@@ -21,6 +21,18 @@ LinkedList::~LinkedList() {
       delete temp;
    }
    delete curNode;
+   delete head;
+}
+
+LinkedList::LinkedList(LinkedList& other) {
+   this->head = nullptr;
+   Node* curNode = other.head;
+
+   // Traverse node and copy 1 by 1
+   while(curNode != NULL) {
+      this->append(curNode->tile);
+      curNode = curNode->next;
+   }
 }
 
 void LinkedList::print() {
@@ -74,28 +86,31 @@ Tile* LinkedList::pop() {
 
 Tile* LinkedList::remove(Letter letter) {
    Node* curNode = head;
-   Node* temp;
-   int count = 0;
+   Node* prevNode;
+   Tile* tile;
+
    // Base case, list is empty
    if(head == nullptr) {
       return NULL;
    }
    // Traverse and search for letter
    while(curNode->next != NULL) {
-      if(curNode->next->tile->letter == letter) {
+      if(curNode->tile->letter == letter) {
          // Letter found, delete node
-         count += 2;
-         std::cout << "Removed " << curNode->next->tile->letter << "-" << curNode->next->tile->value << " at position " << count << std::endl;
-         temp = curNode->next;
-         curNode->next = temp->next;
-         return temp->tile;
+         tile = curNode->tile;
+         prevNode->next = curNode->next;
+         delete curNode;
+         return tile;
       }
       curNode = curNode->next;
-      count += 1;
+      prevNode = curNode;
    }
    return NULL;
 }
 
 Tile* LinkedList::peak() {
+   if(head == nullptr) {
+      return NULL;
+   }
    return this->head->tile;
 }
