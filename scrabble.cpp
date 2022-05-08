@@ -25,7 +25,7 @@ void printNameAndScore(std::string player1, std::string player2, std::string cur
 void printHand(LinkedList* hand);
 void placeTile(char replaceLetter,char letter, char number, std::vector<std::vector<std::string>>* boardPtr);
 void replaceTile(LinkedList* tileBag, LinkedList* hand, Letter letter);
-void calculateScore();
+void calculateScore(char letter, std::shared_ptr<int> curScore);
 LinkedList* createTileBag();
 LinkedList* createHand(LinkedList* tileBag);
 
@@ -83,6 +83,8 @@ int main(void) {
 void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag) {
    std::string curOption = "";
    LinkedList *curHand;
+   std::shared_ptr<int> curScore;
+
    std::cin.ignore();
 
    while (curOption != "Quit") {
@@ -90,18 +92,21 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       if (*curPlayer == "") {
          *curPlayer = *player1;
          curHand = player1Hand;
+         curScore = scorePlayer1;
       }
       else if (*curPlayer == *player1) {
          *curPlayer = *player2;
          curHand = player2Hand;
+         curScore = scorePlayer2;
       }
       else {
          *curPlayer = *player1;
          curHand = player1Hand;
+         curScore = scorePlayer1;
       }
 
-      // printNameAndScore(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2);
-      // printBoard(boardPtr);
+      printNameAndScore(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2);
+      printBoard(boardPtr);
       std::cout << std::endl;
       if (*curPlayer == *player1) {
          printHand(player1Hand);
@@ -120,6 +125,7 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
             placeTile(curOption[6], curOption[11],curOption[12], boardPtr);
             curHand->remove(curOption[6]);
             curHand->append(tileBag->pop());
+            calculateScore(curOption[6], curScore);
             std::cout << "> ";
             std::getline(std::cin, curOption);
          }
@@ -157,8 +163,10 @@ void placeTile(char replaceLetter, char letter, char number, std::vector<std::ve
    boardPtr->at(row).at(col) = replaceLetter;
 }
 
-void calculateScore() {
-
+void calculateScore(char letter, std::shared_ptr<int> curScore) {
+   std::unordered_map<char, int> alphabet = {{'A', 1}, {'B', 3}, {'C', 3}, {'D', 2}, {'E', 1}, {'F', 4}, {'G', 2}, {'H', 4}, {'I', 1}, {'J', 8}, {'K', 5}, {'L', 1}, {'M', 3}, {'N', 1}, {'O', 1},
+                                             {'P', 3}, {'Q', 10}, {'R', 1}, {'S', 1}, {'T', 1}, {'U', 1}, {'V', 4}, {'W', 4}, {'X', 8}, {'Y', 4}, {'Z', 10}};
+   *curScore = *curScore +  alphabet[letter];              
 }
 
 void printHand(LinkedList* hand) {
