@@ -91,6 +91,7 @@ Tile* LinkedList::remove(Letter letter) {
 
    // Base case, list is empty
    if(head == nullptr) {
+      std::cout << "head" << std::endl;
       return NULL;
    }
    // First letter found
@@ -99,9 +100,11 @@ Tile* LinkedList::remove(Letter letter) {
    }
    // Traverse and search for letter
    while(curNode->next != NULL) {
+      std::cout << "tile :" << curNode->tile->letter << std::endl;
       if(curNode->tile->letter == letter) {
          // Letter found, delete node
          tile = curNode->tile;
+         std::cout << "tile :" << tile->letter << std::endl;
          prevNode->next = curNode->next;
          return tile;
       }

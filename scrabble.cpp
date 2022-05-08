@@ -15,7 +15,7 @@
 #define EXIT_SUCCESS    0
 
 void printMenu();
-void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2);
+void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, LinkedList* tileBag, LinkedList* player1Hand, LinkedList* player2Hand);
 void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag);
 void saveGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag, std::string fileName);
 void credit();
@@ -24,16 +24,16 @@ void printBoard(std::vector<std::vector<std::string>>* board);
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2);
 void printHand(LinkedList* hand);
 void placeTile(char replaceLetter,char letter, char number, std::vector<std::vector<std::string>>* boardPtr);
-void replaceTile(LinkedList* tileBag, LinkedList* hand, Letter letter);
+void replaceTile(LinkedList* tileBag, LinkedList* hand, char letter);
 void calculateScore(char letter, std::shared_ptr<int> curScore);
 LinkedList* createTileBag();
 LinkedList* createHand(LinkedList* tileBag);
 
 
 int main(void) {
-   LinkedList* tileBag = createTileBag();
-   LinkedList* player1Hand = createHand(tileBag);
-   LinkedList* player2Hand = createHand(tileBag);
+   LinkedList* tileBag = new LinkedList;
+   LinkedList* player1Hand = new LinkedList;
+   LinkedList* player2Hand = new LinkedList;
 
    int option = 0;
    // Name for player 1
@@ -61,7 +61,7 @@ int main(void) {
       std::cout << std::endl;
 
       if (option == 1) {
-         newGame(player1, player2);
+         newGame(player1, player2, tileBag, player1Hand, player2Hand);
       }
       else if (option == 2) {
          loadGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2, boardPtr,player1Hand, player2Hand, tileBag);
@@ -105,8 +105,8 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
          curScore = scorePlayer1;
       }
 
-      // printNameAndScore(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2);
-      // printBoard(boardPtr);
+      printNameAndScore(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2);
+      printBoard(boardPtr);
       std::cout << std::endl;
       if (*curPlayer == *player1) {
          printHand(player1Hand);
@@ -122,28 +122,29 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
 
       do {
          if (curOption.find("replace") != std::string::npos) {
-            replaceTile(tileBag, curHand, curOption[6]);
+            replaceTile(tileBag, curHand, curOption[8]);
             std::cout << "replaced test" << std::endl;
          }
          else if (curOption.find("place") != std::string::npos) {
             placeTile(curOption[6], curOption[11],curOption[12], boardPtr);
-            curHand->remove(curOption[6]);
+            Tile* tile = curHand->remove(curOption[6]);
+            std::cout << tile->letter << std::endl;
             curHand->append(tileBag->pop());
             calculateScore(curOption[6], curScore);
             std::cout << "> ";
             std::getline(std::cin, curOption);
          }
          else if (curOption.find("save") != std::string::npos) {
-            std::string fileName = curOption.substr(5) + ".txt";
+            std::string fileName = "saveFiles/" + curOption.substr(5) + ".txt";
             saveGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2, boardPtr, player1Hand, player2Hand, tileBag, fileName);
          }     
-      } while (curOption != "place Done" && curOption != "pass" && curOption != "Quit" && curOption.find("replace") == std::string::npos);
+      } while (curOption != "place Done" && curOption != "pass" && curOption != "Quit" && curOption.find("replace") && curOption.find("save") == std::string::npos);
       std::cout << std::endl;
    }
 
    }
 
-void replaceTile(LinkedList* tileBag, LinkedList* hand, Letter letter) {
+void replaceTile(LinkedList* tileBag, LinkedList* hand, char letter) {
    Tile* tile = hand->remove(letter);
    std::cout << tile->letter << std::endl;
    if(tile == NULL) {
@@ -203,7 +204,7 @@ void printMenu() {
 
 }
 
-void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2) {
+void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, LinkedList* tileBag, LinkedList* player1Hand, LinkedList* player2Hand) {
    std::cout << "Starting a New Game" << std::endl;
    std::cout << std::endl;
    std::cout << "Enter a name for player 1 (uppercase characters only)" << std::endl;
@@ -217,7 +218,10 @@ void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> 
    std::cout << "Let's Play!" << std::endl;
    std::cout << std::endl;
 
-
+   // Generate new tile bag and player hands
+   *tileBag = *createTileBag();
+   *player1Hand = *createHand(tileBag);
+   *player2Hand = *createHand(tileBag);
 }
 void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag) {
    std::string fileName;
@@ -229,52 +233,111 @@ void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       std::cout << "Enter the fileaname from which to load a game" << std::endl;
       std::cout << "> ";
       std::cin >> fileName;
-      saveFile.open(fileName);
+      saveFile.open("saveFiles/" + fileName + ".txt");
    }
-   std::cout << "opened " << fileName << std::endl;
+   std::cout << "Opened save file: " << fileName << "\n" << std::endl;
+   std::string tileString;
+   Tile* tile = NULL;
+
    // Player 1 name and score
-   std::string line;
-   std::getline(saveFile, line);
-   *player1 = line;
-   std::getline(saveFile, line);
-   if(std::stoi(line)) {
-      *scorePlayer1 = std::stoi(line);
+   saveFile >> *player1;
+   saveFile >> *scorePlayer1;
+   // Player 1 hand
+   while(tileString.length() != 3) {
+      saveFile >> tileString;
+      // Exception for literally just the letters Z and Q
+      if(isalpha(tileString[3])) {
+         tile = new Tile(tileString[0], std::stoi(tileString.substr(2,3)));
+      }
+      else {
+         tile = new Tile(tileString[0], tileString[2] - '0');
+      }
+      player1Hand->append(tile);
    }
+   // Player 2 name and score
+   saveFile >> *player2;
+   saveFile >> *scorePlayer2;
+   // Player 2 hand
+   tileString = "resetting";
+   while(tileString.length() != 3) {
+      saveFile >> tileString;
+      // Exception for literally just the letters Z and Q
+      if(isalpha(tileString[3])) {
+         tile = new Tile(tileString[0], std::stoi(tileString.substr(2,3)));
+      }
+      else {
+         tile = new Tile(tileString[0], tileString[2] - '0');
+      }
+      player2Hand->append(tile);
+   }
+   // Set getline to first row of board
+   std::string line;
+   for(int i = 0; i < 3; ++i) {
+      std::getline(saveFile, line);
+   }
+   // Get board 
+   for(int i = 0; i < 15; ++i) {
+      std::getline(saveFile, line);
+      for(int j = 1; j < 16; ++j) {
+         tileString = line[(j * 4)];
+         boardPtr->at(i).at(j - 1) = tileString;
+      }
+   }
+   // Get tile bag
+   tileString = "resetting";
+   while(tileString.length() != 3) {
+      saveFile >> tileString;
+      // Exception for literally just the letters Z and Q
+      if(isalpha(tileString[3])) {
+         tile = new Tile(tileString[0], std::stoi(tileString.substr(2,3)));
+      }
+      else {
+         tile = new Tile(tileString[0], tileString[2] - '0');
+      }
+      tileBag->append(tile);
+   }
+   delete tile;
+   
 }
    
 
 void saveGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag, std::string fileName) {
    std::ofstream saveFile(fileName);
-   Tile* tile;
+   Tile* tile = NULL;
    LinkedList* player1HandCopy = new LinkedList(*player1Hand);
    LinkedList* player2HandCopy = new LinkedList(*player2Hand);
+   LinkedList* tileBagCopy = new LinkedList(*tileBag);
 
    // Write player 1 name and score
    saveFile << *player1 << std::endl;
    saveFile << *scorePlayer1 << std::endl;
    // Write player1 hand
-   while(true) {
+   do {
       tile = player1HandCopy->pop();
-      // Check for last tile
+      // // Check for last tile
       if(player1HandCopy->peak() == NULL) {
          saveFile << tile->letter << "-" << tile->value << std::endl;
-         break;;
       }
-      saveFile << tile->letter << "-" << tile->value << ", ";
+      else {
+         saveFile << tile->letter << "-" << tile->value << ", ";
+      }
    }
+   while(player1HandCopy->peak() != NULL);
    // Write player2 name and score
    saveFile << *player2 << std::endl;
    saveFile << *scorePlayer2 << std::endl;
    // Write player2 hand
-   while(true) {
+   do {
       tile = player2HandCopy->pop();
-      // Check for last tile
+      // // Check for last tile
       if(player2HandCopy->peak() == NULL) {
          saveFile << tile->letter << "-" << tile->value << std::endl;
-         break;;
       }
-      saveFile << tile->letter << "-" << tile->value << ", ";
+      else {
+         saveFile << tile->letter << "-" << tile->value << ", ";
+      }
    }
+   while(player2HandCopy->peak() != NULL);
    // Write the board state
    saveFile << "    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  " << std::endl;
    saveFile << "  -------------------------------------------------------------" << std::endl;
@@ -287,8 +350,23 @@ void saveGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       saveFile << std::endl;
       a++;
    }
+   // Write tile bag
+   do {
+      tile = tileBagCopy->pop();
+      // // Check for last tile
+      if(tileBagCopy->peak() == NULL) {
+         saveFile << tile->letter << "-" << tile->value << std::endl;
+      }
+      else {
+         saveFile << tile->letter << "-" << tile->value << ", ";
+      }
+   }
+   while(tileBagCopy->peak() != NULL);
+   
    std::cout << "Successfully saved game to " << fileName << "\n" << std::endl;
    saveFile.close();
+   delete tile;
+   delete tileBagCopy;
    delete player1HandCopy;
    delete player2HandCopy;
 }
