@@ -145,6 +145,7 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
 
 void replaceTile(LinkedList* tileBag, LinkedList* hand, Letter letter) {
    Tile* tile = hand->remove(letter);
+   std::cout << tile->letter << std::endl;
    if(tile == NULL) {
       return;
    }

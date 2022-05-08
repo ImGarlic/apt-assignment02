@@ -86,12 +86,16 @@ Tile* LinkedList::pop() {
 
 Tile* LinkedList::remove(Letter letter) {
    Node* curNode = head;
-   Node* prevNode = curNode;
+   Node* prevNode = nullptr;
    Tile* tile;
 
    // Base case, list is empty
    if(head == nullptr) {
       return NULL;
+   }
+   // First letter found
+   if(head->tile->letter == letter) {
+      return this->pop();
    }
    // Traverse and search for letter
    while(curNode->next != NULL) {
