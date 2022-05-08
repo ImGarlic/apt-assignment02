@@ -132,13 +132,11 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
 
          else if (curOption.find("replace") != std::string::npos) {
             replaceTile(tileBag, curHand, curOption[8]);
-            break;
          }
 
          else if (curOption.find("save") != std::string::npos) {
             std::string fileName = curOption.substr(5) + ".txt";
             saveGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2, boardPtr, player1Hand, player2Hand, tileBag, fileName);
-            break;
          }
       }
    }
