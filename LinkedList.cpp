@@ -99,11 +99,10 @@ Tile* LinkedList::remove(Letter letter) {
          // Letter found, delete node
          tile = curNode->tile;
          prevNode->next = curNode->next;
-         delete curNode;
          return tile;
       }
-      curNode = curNode->next;
       prevNode = curNode;
+      curNode = curNode->next;
    }
    return NULL;
 }

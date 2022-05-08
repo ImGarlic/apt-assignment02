@@ -105,8 +105,8 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
          curScore = scorePlayer1;
       }
 
-      printNameAndScore(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2);
-      printBoard(boardPtr);
+      // printNameAndScore(*player1, *player2, *curPlayer, *scorePlayer1, *scorePlayer2);
+      // printBoard(boardPtr);
       std::cout << std::endl;
       if (*curPlayer == *player1) {
          printHand(player1Hand);
