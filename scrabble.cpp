@@ -100,7 +100,7 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       // Boolean array to track if a player passes twice
       bool passTracker[4] = {false};
       // For loop running 4 times to alternate between players turns and track if a player passes twice
-      for (int i = 0; i < 4 || curOption != "Quit"; i++) { 
+      for (int i = 0; i < 4 && curOption != "Quit"; i++) { 
          // If statements to set the current players information
          if (*curPlayer == "") {
             *curPlayer = *player1;
