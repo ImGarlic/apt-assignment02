@@ -359,6 +359,8 @@ void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       }
       tileBag->append(tile);
    }
+   // Get player turn
+   saveFile >> *curPlayer;
    delete tile;
 }
 
