@@ -17,14 +17,14 @@ public:
    // Add tile to end of list
    void append(Tile* tile);
 
-   // Remove first node from list and return tile
+   // Remove first node from list and return respective tile
    Tile* pop();
 
-   // Removes the first node containing the specified letter
+   // Remove first node containing letter and return respective tile
    Tile* remove(Letter letter);
 
-   // Checks the top of the list
-   Tile* peak();
+   // Return tile at the front of the list
+   Tile* peek();
 
 private:
    Node* head;

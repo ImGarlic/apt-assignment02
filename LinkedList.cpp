@@ -21,7 +21,6 @@ LinkedList::~LinkedList() {
       delete temp;
    }
    delete curNode;
-   delete head;
 }
 
 LinkedList::LinkedList(LinkedList& other) {
@@ -37,7 +36,6 @@ LinkedList::LinkedList(LinkedList& other) {
 
 void LinkedList::print() {
    Node* curNode = head;
-   int count = 0;
    std::cout << "Your hand is" << std::endl;
    // Base case, list is empty
    if(head == nullptr) {
@@ -48,12 +46,9 @@ void LinkedList::print() {
    while(curNode->next != NULL) {
       std::cout << curNode->tile->letter << "-" << curNode->tile->value << ", ";
       curNode = curNode->next;
-      count += 1;
    }
-   // Final node node counted, so add to count and print node
-   count += 1;
+   // Final node to print without separating comma
    std::cout << curNode->tile->letter << "-" << curNode->tile->value << std::endl;
-   std::cout << count << std::endl;
 }
 
 void LinkedList::append(Tile* tile) {
@@ -91,7 +86,6 @@ Tile* LinkedList::remove(Letter letter) {
 
    // Base case, list is empty
    if(head == nullptr) {
-      std::cout << "head" << std::endl;
       return NULL;
    }
    // First letter found
@@ -100,11 +94,9 @@ Tile* LinkedList::remove(Letter letter) {
    }
    // Traverse and search for letter
    while(curNode->next != NULL) {
-      std::cout << "tile :" << curNode->tile->letter << std::endl;
       if(curNode->tile->letter == letter) {
-         // Letter found, delete node
+         // Letter found, remove node
          tile = curNode->tile;
-         std::cout << "tile :" << tile->letter << std::endl;
          prevNode->next = curNode->next;
          return tile;
       }
@@ -114,7 +106,7 @@ Tile* LinkedList::remove(Letter letter) {
    return NULL;
 }
 
-Tile* LinkedList::peak() {
+Tile* LinkedList::peek() {
    if(head == nullptr) {
       return NULL;
    }

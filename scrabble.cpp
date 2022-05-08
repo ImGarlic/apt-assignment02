@@ -18,7 +18,7 @@ void printMenu();
 void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, LinkedList* tileBag, LinkedList* player1Hand, LinkedList* player2Hand);
 void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag);
 void saveGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag, std::string fileName);
-void credit();
+void credits();
 void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag);
 void printBoard(std::vector<std::vector<std::string>>* board);
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2);
@@ -67,7 +67,7 @@ int main(void) {
          loadGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2, boardPtr,player1Hand, player2Hand, tileBag);
       }
       else if (option == 3) {
-         credit();
+         credits();
       }
       else if (option == 4){
          std::cout << "Goodbye" << std::endl;
@@ -193,49 +193,61 @@ void printBoard(std::vector<std::vector<std::string>>* boardPtr) {
       a++;
    }
 }
-void printMenu() {
-   std::cout << "Menu" << std::endl;
-   std::cout << "----" << std::endl;
-   std::cout << "1. New Game" << std::endl;
-   std::cout << "2. Load Game" << std::endl;
-   std::cout << "3. Credits (Show student information)" << std::endl;
-   std::cout << "4. Quit" << std::endl;
-   std::cout << std::endl;
 
+void printMenu() {
+std::cout << "Menu\n"
+         << "----\n"
+         << "1. New Game\n"
+         << "2. Load Game\n"
+         << "3. Credits (Show student information)\n"
+         << "4. Quit\n" 
+<< std::endl;
 }
 
 void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, LinkedList* tileBag, LinkedList* player1Hand, LinkedList* player2Hand) {
-   std::cout << "Starting a New Game" << std::endl;
-   std::cout << std::endl;
-   std::cout << "Enter a name for player 1 (uppercase characters only)" << std::endl;
-   std::cout << "> ";
+   std::cout << "Starting a New Game\n\n"
+            << "Enter a name for player 1 (uppercase characters only)\n"
+            << "> ";
    std::cin >> *player1;
-   std::cout << std::endl;
-   std::cout << "Enter a name for player 2 (uppercase characters only)" << std::endl;
-   std::cout << "> ";
+   while(!(std::all_of((*player1).begin(), (*player1).end(), [](unsigned char c){ return std::isupper(c); }))) {
+      std::cout << "\nName must be uppercase characters only\n"
+               << "> ";
+      std::cin >> *player1;
+   }
+   std::cout << "\nEnter a name for player 2 (uppercase characters only)\n"
+            << "> ";
    std::cin >> *player2;
-   std::cout << std::endl;
-   std::cout << "Let's Play!" << std::endl;
-   std::cout << std::endl;
+   while(!(std::all_of((*player2).begin(), (*player2).end(), [](unsigned char c){ return std::isupper(c); }))) {
+      std::cout << "\nName must be uppercase characters only\n"
+               << "> ";
+      std::cin >> *player2;
+   }
+   std::cout << "\n\nLet's Play!\n" << std::endl;
 
    // Generate new tile bag and player hands
    *tileBag = *createTileBag();
    *player1Hand = *createHand(tileBag);
    *player2Hand = *createHand(tileBag);
 }
+
 void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag) {
    std::string fileName;
    std::ifstream saveFile;
-   saveFile.open(fileName);
+   std::cout << "Enter the fileaname from which to load a game" << std::endl;
+      std::cout << "> ";
+      std::cin >> fileName;
+   saveFile.open("saveFiles/" + fileName + ".txt");
 
    // Check file exists
    while(!saveFile) {
-      std::cout << "Enter the fileaname from which to load a game" << std::endl;
+      std::cout << "\nFile not found" << std::endl;
       std::cout << "> ";
       std::cin >> fileName;
       saveFile.open("saveFiles/" + fileName + ".txt");
    }
-   std::cout << "Opened save file: " << fileName << "\n" << std::endl;
+
+   std::cout << "\nOpened save file: " << fileName << "\n" << std::endl;
+   
    std::string tileString;
    Tile* tile = NULL;
 
@@ -297,9 +309,7 @@ void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       tileBag->append(tile);
    }
    delete tile;
-   
 }
-   
 
 void saveGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag, std::string fileName) {
    std::ofstream saveFile(fileName);
@@ -315,14 +325,14 @@ void saveGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
    do {
       tile = player1HandCopy->pop();
       // // Check for last tile
-      if(player1HandCopy->peak() == NULL) {
+      if(player1HandCopy->peek() == NULL) {
          saveFile << tile->letter << "-" << tile->value << std::endl;
       }
       else {
          saveFile << tile->letter << "-" << tile->value << ", ";
       }
    }
-   while(player1HandCopy->peak() != NULL);
+   while(player1HandCopy->peek() != NULL);
    // Write player2 name and score
    saveFile << *player2 << std::endl;
    saveFile << *scorePlayer2 << std::endl;
@@ -330,14 +340,14 @@ void saveGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
    do {
       tile = player2HandCopy->pop();
       // // Check for last tile
-      if(player2HandCopy->peak() == NULL) {
+      if(player2HandCopy->peek() == NULL) {
          saveFile << tile->letter << "-" << tile->value << std::endl;
       }
       else {
          saveFile << tile->letter << "-" << tile->value << ", ";
       }
    }
-   while(player2HandCopy->peak() != NULL);
+   while(player2HandCopy->peek() != NULL);
    // Write the board state
    saveFile << "    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  " << std::endl;
    saveFile << "  -------------------------------------------------------------" << std::endl;
@@ -354,15 +364,16 @@ void saveGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
    do {
       tile = tileBagCopy->pop();
       // // Check for last tile
-      if(tileBagCopy->peak() == NULL) {
+      if(tileBagCopy->peek() == NULL) {
          saveFile << tile->letter << "-" << tile->value << std::endl;
       }
       else {
          saveFile << tile->letter << "-" << tile->value << ", ";
       }
    }
-   while(tileBagCopy->peak() != NULL);
-   
+   while(tileBagCopy->peek() != NULL);
+   // Write player turn
+   saveFile << *curPlayer;
    std::cout << "Successfully saved game to " << fileName << "\n" << std::endl;
    saveFile.close();
    delete tile;
@@ -405,24 +416,23 @@ LinkedList* createHand(LinkedList* tileBag) {
     }
     return hand;
 }
+void credits() {
+   std::cout << "-------------------------------------\n"
+            << "Name: Alex Ly\n" 
+            << "Student ID: S3660743\n" 
+            << "Email: S3660743@student.rmit.edu.au\n\n" 
 
-void credit() {
-   std::cout << "----------------------------------" << std::endl;
-   std::cout << "Name: Alex Ly" << std::endl;
-   std::cout << "Student ID: S3660743" << std::endl;
-   std::cout << "Email: S3660743@student.rmit.edu.au" << std::endl;
-   std::cout << std::endl;
-   std::cout << "Name: Radiyah Islam" << std::endl;
-   std::cout << "Student ID: S3866803" << std::endl;
-   std::cout << "Email: S3866803@student.rmit.edu.au" << std::endl;
-   std::cout << std::endl;
-   std::cout << "Name: Sayed Walif Ali" << std::endl;
-   std::cout << "Student ID: S3866910" << std::endl;
-   std::cout << "Email: S3866910@student.rmit.edu.au" << std::endl;
-   std::cout << std::endl;
-   std::cout << "Name: Dylan Marsh" << std::endl;
-   std::cout << "Student ID: S3784998" << std::endl;
-   std::cout << "Email: S3784998@student.rmit.edu.au" << std::endl;
-   std::cout << std::endl;
-   std::cout << "----------------------------------" << std::endl;
+            << "Name: Radiyah Islam\n" 
+            << "Student ID: S3866803\n" 
+            << "Email: S3866803@student.rmit.edu.au\n\n" 
+   
+            << "Name: Sayed Walif Ali\n" 
+            << "Student ID: S3866910\n" 
+            << "Email: S3866910@student.rmit.edu.au\n\n" 
+
+            << "Name: Dylan Marsh\n" 
+            << "Student ID: S3784998\n" 
+            << "Email: S3784998@student.rmit.edu.au\n" 
+            << "-------------------------------------\n" 
+<< std::endl;
 }
