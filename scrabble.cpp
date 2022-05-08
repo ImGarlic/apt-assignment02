@@ -120,8 +120,12 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       std::cin.sync();
       std::getline(std::cin, curOption);
 
-      while (curOption != "place Done" && curOption != "pass" && curOption != "replace" && curOption != "Quit") {
-         if (curOption.find("place") != std::string::npos) {
+      do {
+         if (curOption.find("replace") != std::string::npos) {
+            replaceTile(tileBag, curHand, curOption[6]);
+            std::cout << "replaced test" << std::endl;
+         }
+         else if (curOption.find("place") != std::string::npos) {
             placeTile(curOption[6], curOption[11],curOption[12], boardPtr);
             curHand->remove(curOption[6]);
             curHand->append(tileBag->pop());
@@ -129,16 +133,12 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
             std::cout << "> ";
             std::getline(std::cin, curOption);
          }
-
-         else if (curOption.find("replace") != std::string::npos) {
-            replaceTile(tileBag, curHand, curOption[8]);
-         }
-
          else if (curOption.find("save") != std::string::npos) {
             std::string fileName = curOption.substr(5) + ".txt";
             saveGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2, boardPtr, player1Hand, player2Hand, tileBag, fileName);
-         }
-      }
+         }     
+      } while (curOption != "place Done" && curOption != "pass" && curOption != "Quit" && curOption.find("replace") == std::string::npos);
+      std::cout << std::endl;
    }
 
    }
