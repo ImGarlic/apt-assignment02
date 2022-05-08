@@ -170,7 +170,7 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
            // Conditional checks   
          } while (curOption != "place Done" && curOption != "pass" && curOption != "Quit" && curOption.find("replace") && curOption.find("save") == std::string::npos && bingo == false);
          // End the game if tile bag is empty, a player has no more tiles in their hand or a player passes twice
-         if ((tileBag->peak() == NULL) || (player1Hand->peak() == NULL) || (player2Hand->peak() == NULL) || (passTracker[0] == true && passTracker[2] == true) || (passTracker[1] == true and passTracker[3] == true)) {
+         if ((tileBag->peek() == NULL) || (player1Hand->peek() == NULL) || (player2Hand->peek() == NULL) || (passTracker[0] == true && passTracker[2] == true) || (passTracker[1] == true and passTracker[3] == true)) {
             endGame(*player1, *player2, *scorePlayer1, *scorePlayer2);
             curOption = "Quit";
          }
@@ -359,6 +359,8 @@ void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       }
       tileBag->append(tile);
    }
+   // Get player turn
+   saveFile >> *curPlayer;
    delete tile;
 }
 
