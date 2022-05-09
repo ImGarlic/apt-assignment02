@@ -490,7 +490,7 @@ void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    saveFile << _player1->score << std::endl;
    // Write player1 hand
    do {
-      tile = player1HandCopy->pop();
+      tile = new Tile(*player1HandCopy->pop());
       // // Check for last tile
       if(player1HandCopy->peek() == NULL) {
          saveFile << tile->letter << "-" << tile->value << std::endl;
@@ -498,6 +498,7 @@ void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
       else {
          saveFile << tile->letter << "-" << tile->value << ", ";
       }
+      delete tile;
    }
    while(player1HandCopy->peek() != NULL);
    // Write player2 name and score
@@ -505,7 +506,7 @@ void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    saveFile << _player2->score << std::endl;
    // Write player2 hand
    do {
-      tile = player2HandCopy->pop();
+      tile = new Tile(*player2HandCopy->pop());
       // // Check for last tile
       if(player2HandCopy->peek() == NULL) {
          saveFile << tile->letter << "-" << tile->value << std::endl;
@@ -513,6 +514,7 @@ void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
       else {
          saveFile << tile->letter << "-" << tile->value << ", ";
       }
+      delete tile;
    }
    while(player2HandCopy->peek() != NULL);
    // Write the board state
@@ -529,7 +531,7 @@ void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    }
    // Write tile bag
    do {
-      tile = tileBagCopy->pop();
+      tile = new Tile(*tileBagCopy->pop());
       // // Check for last tile
       if(tileBagCopy->peek() == NULL) {
          saveFile << tile->letter << "-" << tile->value << std::endl;
@@ -537,6 +539,7 @@ void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
       else {
          saveFile << tile->letter << "-" << tile->value << ", ";
       }
+      delete tile;
    }
    while(tileBagCopy->peek() != NULL);
    // Write player turn
@@ -548,7 +551,6 @@ void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    }
    std::cout << "Successfully saved game to " << fileName << "\n" << std::endl;
    saveFile.close();
-   delete tile;
    delete tileBagCopy;
    delete player1HandCopy;
    delete player2HandCopy;
