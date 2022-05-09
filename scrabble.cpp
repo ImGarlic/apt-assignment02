@@ -107,6 +107,9 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
          printBoard(boardPtr);
          std::cout << std::endl;
          curPlayer->hand->print();
+         // Change turn state bool
+         _player1->changeTurn();
+         _player2->changeTurn();
          // Get user input
          std::cout << "> ";
          std::cin.clear();
@@ -192,8 +195,8 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
            // Conditional checks   
          } while (curOption != "place Done" && curOption != "pass" && curOption != "Quit" && curOption.find("replace") == std::string::npos && bingo == false);
          // End the game if tile bag is empty, a player has no more tiles in their hand or a player passes twice
-         if ((tileBag->peek() == NULL) || (_player1->hand->peek() == NULL) || (_player2->hand->peek() == NULL) ||
-             (passTracker[0] == true && passTracker[2] == true) || (passTracker[1] == true and passTracker[3] == true)) {
+         if ((tileBag->peek() == NULL) && ((_player1->hand->peek() == NULL) || (_player2->hand->peek() == NULL) ||
+             (passTracker[0] == true && passTracker[2] == true) || (passTracker[1] == true and passTracker[3] == true))) {
             endGame(_player1, _player2);
             curOption = "Quit";
          }
