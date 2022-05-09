@@ -414,10 +414,10 @@ void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    saveFile >> (_player1)->name;
    saveFile >> (_player1)->score;
    // Player 1 hand
-   while(input.length() != 3) {
+   do {
       saveFile >> input;
       // Exception for literally just the letters Z and Q
-      if(isalpha(input[3])) {
+      if(input.length() == 5) {
          tile = new Tile(input[0], std::stoi(input.substr(2,3)));
       }
       else {
@@ -425,15 +425,16 @@ void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
       }
       _player1->hand->append(tile);
    }
+   while(input.find(',') != std::string::npos);
    // Player 2 name and score
    saveFile >> (_player2)->name;
    saveFile >> (_player2)->score;
    // Player 2 hand
    input = "resetting";
-   while(input.length() != 3) {
+   do {
       saveFile >> input;
       // Exception for literally just the letters Z and Q
-      if(isalpha(input[3])) {
+      if(input.length() == 5) {
          tile = new Tile(input[0], std::stoi(input.substr(2,3)));
       }
       else {
@@ -441,6 +442,7 @@ void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
       }
       _player2->hand->append(tile);
    }
+   while(input.find(',') != std::string::npos);
    // Set getline to first row of board
    std::string line;
    for(int i = 0; i < 3; ++i) {
@@ -456,10 +458,10 @@ void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    }
    // Get tile bag
    input = "resetting";
-   while(input.length() != 3) {
+   do {
       saveFile >> input;
       // Exception for literally just the letters Z and Q
-      if(isalpha(input[3])) {
+      if(input.length() == 5) {
          tile = new Tile(input[0], std::stoi(input.substr(2,3)));
       }
       else {
@@ -467,6 +469,8 @@ void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
       }
       tileBag->append(tile);
    }
+   while(input.find(',') != std::string::npos);
+   tileBag->print();
    // Get player turn
    saveFile >> input;
    if(_player1->name == input) {
@@ -475,7 +479,6 @@ void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    else {
       _player2->turn = true;
    }
-   delete tile;
 }
 
 void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* tileBag, std::string fileName) {
@@ -507,7 +510,7 @@ void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    // Write player2 hand
    do {
       tile = new Tile(*player2HandCopy->pop());
-      // // Check for last tile
+      // Check for last tile
       if(player2HandCopy->peek() == NULL) {
          saveFile << tile->letter << "-" << tile->value << std::endl;
       }
