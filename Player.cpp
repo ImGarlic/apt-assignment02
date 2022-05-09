@@ -4,22 +4,18 @@
 #include <algorithm>
 
 Player::Player() {
-
+    hand = new LinkedList();
+    turn = false;
+    score = 0;
 }
 
 Player::~Player() {
 
 }
-void Player::setName() {
-    std::cin >> name;
-    while(!(std::all_of(name.begin(), name.end(), [](unsigned char c){ return std::isupper(c); }))) {
-        std::cout << "\nName must be uppercase characters only\n"
-                << "> ";
-        std::cin >> name;
-    }
+void Player::setName(std::string name) {
+    this->name = name;
 }
 void Player::createHand(LinkedList* tileBag) {
-    hand = new LinkedList();
     Tile* tile = NULL;
 
     // Take first 7 tiles from bag and add to hand

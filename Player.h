@@ -12,7 +12,7 @@ public:
    ~Player();
 
    // Set player name
-   void setName();
+   void setName(std::string name);
    // Generate a hand of 7 tiles from the tile bag
    void createHand(LinkedList* tileBag);
    // Change turn
