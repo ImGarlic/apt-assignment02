@@ -23,7 +23,7 @@ void credits();
 void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt);
 void printBoard(std::vector<std::vector<std::string>>* board);
 void printNameAndScore(Player* _player1, Player* _player2);
-void placeTile(char replaceLetter,char letter, char number, std::vector<std::vector<std::string>>* boardPtr);
+void placeTile(char replaceLetter, char letter, char number1, char number2, std::vector<std::vector<std::string>>* boardPtr);
 void replaceTile(LinkedList* tileBag, LinkedList* hand, char letter);
 void endGame(Player* _player1, Player* _player2);
 bool inputCheck(std::string curOption);
@@ -85,6 +85,7 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    std::string curOption = *curOpt;
    bool bingo = false;
    int bingoCounter = 0;
+   int length = 0;
 
    // Ignore first input before cin
    std::cin.ignore();
@@ -136,9 +137,13 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
             }            
             // If user input is a place command
             else if (curOption.find("place") != std::string::npos) {
-               // Place tile on board
-               placeTile(curOption[6], curOption[11],curOption[12], boardPtr);
-               // Remove tile from hand
+               length = curOption.length();
+               if (length == 13) {
+                  placeTile(curOption[6], curOption[11],curOption[12], ' ', boardPtr);
+               }
+               else if (length == 14){
+                  placeTile(curOption[6], curOption[11],curOption[12], curOption[13], boardPtr);
+               }
                Tile* tile = curPlayer->hand->remove(curOption[6]);
                std::cout << tile->letter << std::endl;
                // Add tile to hand from bag
@@ -173,6 +178,16 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
                saveGame(_player1, _player2, boardPtr, tileBag, fileName);
                std::cout << "> ";
                std::getline(std::cin, curOption);
+               if (std::cin.eof()) {
+                  curOption = "Quit";
+               }
+               else {
+                  while (!inputCheck(curOption)) {
+                     std::cout << "Invalid Input" << std::endl;
+                     std::cout << "> ";
+                     std::getline(std::cin, curOption);
+                  }                     
+               }
             }
            // Conditional checks   
          } while (curOption != "place Done" && curOption != "pass" && curOption != "Quit" && curOption.find("replace") == std::string::npos && bingo == false);
@@ -262,12 +277,22 @@ void replaceTile(LinkedList* tileBag, LinkedList* hand, char letter) {
    }
 }
 
-void placeTile(char replaceLetter, char letter, char number, std::vector<std::vector<std::string>>* boardPtr) {
+void placeTile(char replaceLetter, char letter, char number1, char number2, std::vector<std::vector<std::string>>* boardPtr) {
    std::unordered_map<char, int> alphabet = {{'A', 0}, {'B', 1}, {'C', 2}, {'D', 3}, {'E', 4}, {'F', 5}, {'G', 6}, {'H', 7}, {'I', 8}, {'J', 9}, {'K', 10}, {'L', 11}, {'M', 12}, {'N', 13}, {'O', 14}};
-   const char* num = &number;
-   int row = alphabet[letter];
-   int col = std::atoi(num);
-   boardPtr->at(row).at(col) = replaceLetter;
+   if (number2 == ' ') {
+      const char* num1 = &number1;
+      int row = alphabet[letter];
+      int col = std::atoi(num1);
+      boardPtr->at(row).at(col) = replaceLetter;
+   }
+   else {
+      std::string num;
+      num += std::string(1, number1);
+      num += std::string(1, number2);
+      int row = alphabet[letter];
+      int col = std::stoi(num);
+      boardPtr->at(row).at(col) = replaceLetter;
+   }
 }
 
 void printNameAndScore(Player* _player1, Player* _player2) {
