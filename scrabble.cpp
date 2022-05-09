@@ -15,11 +15,11 @@
 #define EXIT_SUCCESS    0
 
 void printMenu();
-void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, LinkedList* tileBag, LinkedList* player1Hand, LinkedList* player2Hand);
+void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, LinkedList* tileBag, LinkedList* player1Hand, LinkedList* player2Hand, std::shared_ptr<std::string> curOpt);
 void loadGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag);
 void saveGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag, std::string fileName);
 void credits();
-void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag);
+void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag, std::shared_ptr<std::string> curOpt);
 void printBoard(std::vector<std::vector<std::string>>* board);
 void printNameAndScore(std::string player1, std::string player2, std::string curPlayer, int scorePlayer1, int scorePlayer2);
 void printHand(LinkedList* hand);
@@ -51,6 +51,8 @@ int main(void) {
    std::vector<std::vector<std::string>> board(15,std::vector<std::string>(15, " "));
    // std::shared_ptr<std::vector<std::vector<std::string>>> board = std::make_shared<std::vector<std::vector<std::string>>>(15,std::vector<std::string>(15, " "));
    std::vector<std::vector<std::string>> *boardPtr = &board;
+   // String the record the users current input
+   std::shared_ptr<std::string> curOpt = std::make_shared<std::string>("");
 
    do {
       std::cout << "Welcome to Scrabble!" << std::endl;
@@ -59,10 +61,14 @@ int main(void) {
       printMenu();
       std::cout << "> ";
       std::cin >> option;
+      if (std::cin.eof()) {
+         std::cout << "\nGoodbye" << std::endl;
+         return EXIT_SUCCESS;         
+      }
       std::cout << std::endl;
       // Make new game
       if (option == 1) {
-         newGame(player1, player2, tileBag, player1Hand, player2Hand);
+         newGame(player1, player2, tileBag, player1Hand, player2Hand, curOpt);
       }
       // Load a game from a save file
       else if (option == 2) {
@@ -79,13 +85,13 @@ int main(void) {
       }
    } while ( option != 1 && option != 2);
    // Enter playGame to play scrabble
-   playGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2, boardPtr, player1Hand, player2Hand, tileBag);
+   playGame(player1, player2, curPlayer, scorePlayer1, scorePlayer2, boardPtr, player1Hand, player2Hand, tileBag, curOpt);
    std::cout << "Goodbye" << std::endl;
    return EXIT_SUCCESS;
 }
 
-void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag) {
-   std::string curOption = "";
+void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, std::shared_ptr<std::string> curPlayer, std::shared_ptr<int> scorePlayer1, std::shared_ptr<int> scorePlayer2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* player1Hand, LinkedList* player2Hand, LinkedList* tileBag, std::shared_ptr<std::string> curOpt) {
+   std::string curOption = *curOpt;
    std::string player1PrevInput = "";
    std::string player1CurInput = "";
    LinkedList *curHand;
@@ -132,6 +138,9 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
          std::cin.clear();
          std::cin.sync();
          std::getline(std::cin, curOption);
+         if (std::cin.eof()) {
+            curOption = "Quit";
+         }
          // If a player passes, record it in the boolean array
          if (curOption.find("pass") != std::string::npos) {
             passTracker[i] = true;
@@ -160,6 +169,9 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
                else {
                   std::cout << "> ";
                   std::getline(std::cin, curOption);
+                  if (std::cin.eof()) {
+                     curOption = "Quit";
+                  }
                }
             }
             // If user input is a save command
@@ -184,9 +196,10 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
 
 void endGame(std::string player1, std::string player2, int scorePlayer1, int scorePlayer2) {
    std::cout << std::endl;
-   std::cout << "Game over" << std::endl;
-   std::cout << "Score for " << player1 << ": " << scorePlayer1 << std::endl;
-   std::cout << "Score for " << player2 << ": " << scorePlayer2 << std::endl;
+   std::cout << "Game over\n" <<
+                "Score for " << player1 << ": " << scorePlayer1 <<
+                "\nScore for " << player2 << ": " << scorePlayer2 << 
+   std::endl;
    if (scorePlayer1 >= scorePlayer2) {
       std::cout << "Player " << player1 << " won!" << std::endl;
    }
@@ -255,25 +268,48 @@ std::cout << "Menu\n"
 << std::endl;
 }
 
-void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, LinkedList* tileBag, LinkedList* player1Hand, LinkedList* player2Hand) {
+void newGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string> player2, LinkedList* tileBag, LinkedList* player1Hand, LinkedList* player2Hand, std::shared_ptr<std::string> curOpt) {
    std::cout << "Starting a New Game\n\n"
             << "Enter a name for player 1 (uppercase characters only)\n"
             << "> ";
    std::cin >> *player1;
-   while(!(std::all_of((*player1).begin(), (*player1).end(), [](unsigned char c){ return std::isupper(c); }))) {
-      std::cout << "\nName must be uppercase characters only\n"
-               << "> ";
-      std::cin >> *player1;
+   if (std::cin.eof()) {
+      *curOpt = "Quit";
    }
-   std::cout << "\nEnter a name for player 2 (uppercase characters only)\n"
-            << "> ";
-   std::cin >> *player2;
-   while(!(std::all_of((*player2).begin(), (*player2).end(), [](unsigned char c){ return std::isupper(c); }))) {
-      std::cout << "\nName must be uppercase characters only\n"
+   else {
+      while(!(std::all_of((*player1).begin(), (*player1).end(), [](unsigned char c){ return std::isupper(c); }))) {
+         std::cout << "\nName must be uppercase characters only\n"
+                  << "> ";
+         std::cin >> *player1;
+         if (std::cin.eof()) {
+            *curOpt = "Quit";
+         }
+      }
+   }
+   if (*curOpt != "Quit"){
+      std::cout << "\nEnter a name for player 2 (uppercase characters only)\n"
                << "> ";
       std::cin >> *player2;
+      if (std::cin.eof()) {
+         *curOpt = "Quit";
+      }
+      else {
+         while(!(std::all_of((*player2).begin(), (*player2).end(), [](unsigned char c){ return std::isupper(c); }))) {
+            std::cout << "\nName must be uppercase characters only\n"
+                     << "> ";
+            std::cin >> *player2;
+            if (std::cin.eof()) {
+               *curOpt = "Quit";
+            }
+         }
+      }
    }
-   std::cout << "\n\nLet's Play!\n" << std::endl;
+   if (*curOpt != "Quit") {
+      std::cout << "\n\nLet's Play!\n" << std::endl;
+   }
+   else {
+      std::cout << std::endl;
+   }
 
    // Generate new tile bag and player hands
    *tileBag = *createTileBag();
