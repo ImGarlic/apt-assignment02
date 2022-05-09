@@ -28,6 +28,7 @@ void placeTile(char replaceLetter,char letter, char number, std::vector<std::vec
 void replaceTile(LinkedList* tileBag, LinkedList* hand, char letter);
 void calculateScore(char letter, std::shared_ptr<int> curScore);
 void endGame(Player* _player1, Player* _player2);
+bool inputCheck(std::string curOption);
 LinkedList* createTileBag();
 LinkedList* createHand(LinkedList* tileBag);
 
@@ -127,6 +128,14 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
          if (std::cin.eof()) {
             curOption = "Quit";
          }
+         else {
+            while (!inputCheck(curOption)) {
+               std::cout << "Invalid Input" << std::endl;
+               std::cout << "> ";
+               std::getline(std::cin, curOption);
+            }
+         }
+
          // If a player passes, record it in the boolean array
          if (curOption.find("pass") != std::string::npos) {
             passTracker[i] = true;
@@ -138,6 +147,9 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
                replaceTile(tileBag, curPlayer->hand, curOption[8]);
                std::cout << "replaced test" << std::endl;
             }
+            else if (curOption.find("place Done") != std::string::npos) {
+               curOption = "pass";
+            }            
             // If user input is a place command
             else if (curOption.find("place") != std::string::npos) {
                placeTile(curOption[6], curOption[11],curOption[12], boardPtr);
@@ -158,15 +170,25 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
                   if (std::cin.eof()) {
                      curOption = "Quit";
                   }
+                  else {
+                     while (!inputCheck(curOption)) {
+                        std::cout << "Invalid Input" << std::endl;
+                        std::cout << "> ";
+                        std::getline(std::cin, curOption);
+                     }                     
+                  }
                }
             }
             // If user input is a save command
             else if (curOption.find("save") != std::string::npos) {
                std::string fileName = "saveFiles/" + curOption.substr(5) + ".txt";
                saveGame(_player1, _player2, boardPtr, tileBag, fileName);
+               std::cout << "> ";
+               std::getline(std::cin, curOption);
             }
+
            // Conditional checks   
-         } while (curOption != "place Done" && curOption != "pass" && curOption != "Quit" && curOption.find("replace") && curOption.find("save") == std::string::npos && bingo == false);
+         } while (curOption != "place Done" && curOption != "pass" && curOption != "Quit" && curOption.find("replace") == std::string::npos && bingo == false);
          // End the game if tile bag is empty, a player has no more tiles in their hand or a player passes twice
          if ((tileBag->peek() == NULL) || (_player1->hand->peek() == NULL) || (_player2->hand->peek() == NULL) || (passTracker[0] == true && passTracker[2] == true) || (passTracker[1] == true and passTracker[3] == true)) {
             endGame(_player1, _player2);
@@ -179,6 +201,59 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
       }
    }
    }
+
+bool inputCheck(std::string curOption) {
+   int length = curOption.length();
+
+   if (length == 9) {
+      if (curOption.find("replace") != std::string::npos) {
+         if (curOption[7] == ' ') {
+            if (curOption[8] >= 'A' && curOption[8] <= 'Z') {
+               return true;
+            }
+         }
+      }
+   }
+
+   else if (length == 13 || length == 14){
+      if (curOption.find("place") != std::string::npos) {
+         if (curOption[5] == ' ' && curOption[8] == 'a' && curOption[9] == 't' && curOption[5] == ' ') {
+               if (curOption[11] >= 'A' && curOption[11] <= 'O') {
+                  if (length == 13) {
+                     if (curOption[12] >= '0' && curOption[12] <= '9') {
+                           return true;
+                     }
+                  }
+                  else if (length == 14) {
+                     if (curOption[13] >= '0' && curOption[13] <= '9') {
+                           return true;
+                     }                        
+                  }
+               }
+         }
+      }
+   }
+
+   else if (length == 10) {
+      if (curOption.find("place Done") != std::string::npos) {
+         return true;
+      }
+   }
+
+   else if (length == 4) {
+      if (curOption.find("pass") != std::string::npos) {
+         return true;
+      }
+   }
+
+   else if (curOption.find("save") != std::string::npos) {
+      if (curOption[4] == ' ') {  
+         return true;
+      }
+   }
+   
+   return false;
+}
 
 void endGame(Player* _player1, Player* _player2) {
    std::cout << std::endl;
