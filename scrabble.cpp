@@ -27,6 +27,7 @@ void placeTile(char replaceLetter,char letter, char number, std::vector<std::vec
 void replaceTile(LinkedList* tileBag, LinkedList* hand, char letter);
 void calculateScore(char letter, std::shared_ptr<int> curScore);
 void endGame(std::string player1, std::string player2, int scorePlayer1, int scorePlayer2);
+bool inputCheck(std::string curOption);
 LinkedList* createTileBag();
 LinkedList* createHand(LinkedList* tileBag);
 
@@ -193,6 +194,64 @@ void playGame(std::shared_ptr<std::string> player1, std::shared_ptr<std::string>
       }
    }
    }
+
+bool inputCheck(std::string curOption) {
+   int length = curOption.length();
+
+   if (length == 9) {
+      if (curOption.find("replace") != std::string::npos) {
+         if (curOption[7] == ' ') {
+            if (curOption[8] >= 'A' && curOption[8] <= 'Z') {
+               return true;
+            }
+         }
+      }
+   }
+
+   else if (length == 13 || length == 14){
+      if (curOption.find("place") != std::string::npos) {
+         std::cout << "True1" << std::endl;
+         if (curOption[5] == ' ' && curOption[8] == 'a' && curOption[9] == 't' && curOption[5] == ' ') {
+               std::cout << "True2" << std::endl;
+               if (curOption[11] >= 'A' && curOption[11] <= 'O') {
+                  std::cout << "True3" << std::endl;
+                  if (length == 13) {
+                     if (curOption[12] >= '0' && curOption[12] <= '9') {
+                           std::cout << "True4" << std::endl;
+                           return true;
+                     }
+                  }
+                  else if (length == 14) {
+                     if (curOption[13] >= '0' && curOption[13] <= '9') {
+                           std::cout << "True5" << std::endl;
+                           return true;
+                     }                        
+                  }
+               }
+         }
+      }
+   }
+
+   else if (length == 10) {
+      if (curOption.find("place Done") != std::string::npos) {
+         return true;
+      }
+   }
+
+   else if (length == 4) {
+      if (curOption.find("pass") != std::string::npos) {
+         return true;
+      }
+   }
+
+   else if (curOption.find("save") != std::string::npos) {
+      if (curOption[4] == ' ') {  
+         return true;
+      }
+   }
+   
+   return false;
+}
 
 void endGame(std::string player1, std::string player2, int scorePlayer1, int scorePlayer2) {
    std::cout << std::endl;
