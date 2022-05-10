@@ -23,7 +23,6 @@ void credits();
 void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt);
 void printBoard(std::vector<std::vector<std::string>>* board);
 void printNameAndScore(Player* _player1, Player* _player2);
-// void placeTile(char replaceLetter, char letter, std::string number, std::vector<std::vector<std::string>>* boardPtr);
 void endGame(Player* _player1, Player* _player2);
 bool inputCheck(std::string curOption);
 LinkedList* createTileBag();
@@ -271,15 +270,6 @@ void endGame(Player* _player1, Player* _player2) {
       std::cout << "It's a draw!" << std::endl; 
    }
 }
-
-// void placeTile(char replaceLetter, char letter, std::string number, std::vector<std::vector<std::string>>* boardPtr) {
-//    std::unordered_map<char, int> alphabet = {{'A', 0}, {'B', 1}, {'C', 2}, {'D', 3}, {'E', 4}, {'F', 5}, {'G', 6}, {'H', 7}, 
-//                                              {'I', 8}, {'J', 9}, {'K', 10}, {'L', 11}, {'M', 12}, {'N', 13}, {'O', 14}};
-//       std::string num1 = number;
-//       int row = alphabet[letter];
-//       int col = std::stoi(num1);
-//       boardPtr->at(row).at(col) = replaceLetter;
-// }
 
 void printNameAndScore(Player* _player1, Player* _player2) {
    if(_player1->turn) {
