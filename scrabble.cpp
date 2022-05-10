@@ -19,13 +19,13 @@ void printMenu();
 void newGame(Player* _player1, Player* _player2, LinkedList* tileBag, std::shared_ptr<std::string> curOpt);
 void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt);
 void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* tileBag, std::string fileName);
-void credits();
 void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt);
 void printBoard(std::vector<std::vector<std::string>>* board);
 void printNameAndScore(Player* _player1, Player* _player2);
 void endGame(Player* _player1, Player* _player2);
 bool inputCheck(std::string curOption);
 LinkedList* createTileBag();
+void credits();
 
 
 int main(void) {
@@ -38,12 +38,12 @@ int main(void) {
    Player* _player2 = new Player;
    // A 2D Vector that will serve as the board
    std::vector<std::vector<std::string>> board(15,std::vector<std::string>(15, " "));
-   // std::shared_ptr<std::vector<std::vector<std::string>>> board = std::make_shared<std::vector<std::vector<std::string>>>(15,std::vector<std::string>(15, " "));
    std::vector<std::vector<std::string>> *boardPtr = &board;
    // String the record the users current input
    std::shared_ptr<std::string> curOpt = std::make_shared<std::string>("");
 
    do {
+      // Open main menu
       std::cout << "Welcome to Scrabble!" << std::endl;
       std::cout << "--------------------\n" << std::endl;
       printMenu();
@@ -83,7 +83,6 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    std::string curOption = *curOpt;
    bool bingo = false;
    int bingoCounter = 0;
-   // int length = 0;
 
    // Ignore first input before cin
    std::cin.ignore();
@@ -323,11 +322,11 @@ void newGame(Player* _player1, Player* _player2, LinkedList* tileBag, std::share
       std::cout << "Enter a name for player 1\n"
                << "> ";
       std::cin >> input;
-      std::cout << std::endl;
       if (!(std::all_of((input).begin(), (input).end(), [](unsigned char c){ return std::isupper(c); }))) {
          std::cout << "Name must be uppercase characters only\n" << std::endl;
       }
    } while(!(std::all_of((input).begin(), (input).end(), [](unsigned char c){ return std::isupper(c); })));
+   std::cout << std::endl;
    _player1->setName(input);
 
    // Set player 2 name
@@ -346,7 +345,7 @@ void newGame(Player* _player1, Player* _player2, LinkedList* tileBag, std::share
    } while(!(std::all_of((input).begin(), (input).end(), [](unsigned char c){ return std::isupper(c); })));
    _player2->setName(input);
    
-   std::cout << "\n\nLet's Play!\n" << std::endl;
+   std::cout << "\nLet's Play!\n" << std::endl;
 
    // Generate new tile bag and player hands
    *tileBag = *createTileBag();
@@ -362,7 +361,8 @@ void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    std::string input;
    Tile* tile = NULL;
 
-   // Get file
+   // Get file name
+   std::getline(std::cin, fileName);
    do {
       if (std::cin.eof()) {
          *curOpt = "Quit";
@@ -371,10 +371,10 @@ void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
       }
       std::cout << "Enter the filename from which to load a game" << std::endl;
          std::cout << "> ";
-         std::cin >> fileName;
+         std::getline(std::cin, fileName);
       saveFile.open("saveFiles/" + fileName + ".save");
       if (!saveFile) {
-         std::cout << "\nFile not found or invalid\n" << std::endl;
+         std::cout << "File not found or invalid\n" << std::endl;
       }
    } while(!saveFile);
    std::cout << "\nOpened save file: " << fileName << "\n" << std::endl;
@@ -509,7 +509,7 @@ void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    else {
       do {
          tile = new Tile(*tileBagCopy->pop());
-         // // Check for last tile
+          // Check for last tile
          if(tileBagCopy->peek() == NULL) {
             saveFile << tile->letter << "-" << tile->value << std::endl;
          }
@@ -541,7 +541,7 @@ LinkedList* createTileBag() {
    Letter letter;
    Value value;
 
-   // Read file into vector
+   // Read file into vector for shuffling
    std::ifstream file("ScrabbleTiles.txt");
    while(file >> letter >> value) {
       tiles.push_back(new Tile(letter, value));
