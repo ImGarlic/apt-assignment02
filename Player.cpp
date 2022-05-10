@@ -2,6 +2,8 @@
 #include "Player.h"
 #include <iostream>
 #include <algorithm>
+#include <unordered_map>
+#include <vector>
 
 Player::Player() {
     hand = new LinkedList();
@@ -12,9 +14,11 @@ Player::Player() {
 Player::~Player() {
 
 }
+
 void Player::setName(std::string name) {
     this->name = name;
 }
+
 void Player::createHand(LinkedList* tileBag) {
     Tile* tile = NULL;
 
@@ -46,4 +50,13 @@ void Player::replaceTile(LinkedList* tileBag, Letter letter) {
     // Add bag's top tile to hand
     tile = tileBag->pop();
     hand->append(tile);
+}
+
+void Player::placeTile(char replaceLetter, char letter, std::string number, std::vector<std::vector<std::string>>* boardPtr) {
+   std::unordered_map<char, int> alphabet = {{'A', 0}, {'B', 1}, {'C', 2}, {'D', 3}, {'E', 4}, {'F', 5}, {'G', 6}, {'H', 7}, 
+                                             {'I', 8}, {'J', 9}, {'K', 10}, {'L', 11}, {'M', 12}, {'N', 13}, {'O', 14}};
+      std::string num1 = number;
+      int row = alphabet[letter];
+      int col = std::stoi(num1);
+      boardPtr->at(row).at(col) = replaceLetter;
 }

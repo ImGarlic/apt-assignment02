@@ -4,6 +4,7 @@
 
 #include "LinkedList.h"
 #include <iostream>
+#include <vector>
 
 class Player {
 public:
@@ -19,6 +20,8 @@ public:
    void changeTurn();
    // Replace chosend tile in hand with tile from top of bag
    void replaceTile(LinkedList* tileBag, Letter letter);
+   // Place a tile on the board
+   void placeTile(char replaceLetter, char letter, std::string number, std::vector<std::vector<std::string>>* boardPtr);
 
    std::string    name;
    int    score;
