@@ -1,0 +1,90 @@
+Welcome to Scrabble!
+--------------------
+
+Menu
+----
+1. New Game
+2. Load Game
+3. Credits (Show student information)
+4. Quit
+
+> 1
+
+Starting a New Game
+
+Enter a name for player 1
+> A
+
+Enter a name for player 2
+> B
+
+
+Let's Play!
+
+A, it's your turn
+Score for B: 0
+    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14
+  -------------------------------------------------------------
+A |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+C |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+D |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+E |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+F |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+G |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+H |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+I |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+J |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+K |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+L |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+
+Your hand is
+T-1, T-1, I-1, M-3, A-1, E-1, C-3
+>
+PS C:\Users\Alex\OneDrive\University\2022\Advanced_Programming_Techniques\assignment2> ./main
+Welcome to Scrabble!
+--------------------
+
+Menu
+----
+1. New Game
+2. Load Game
+3. Credits (Show student information)
+4. Quit
+
+> 3
+
+-------------------------------------
+Name: Alex Ly
+Student ID: S3660743
+Email: S3660743@student.rmit.edu.au
+
+Name: Radiyah Islam
+Student ID: S3866803
+Email: S3866803@student.rmit.edu.au
+
+Name: Sayed Walif Ali
+Student ID: S3866910
+Email: S3866910@student.rmit.edu.au
+
+Name: Dylan Marsh
+Student ID: S3784998
+Email: S3784998@student.rmit.edu.au
+-------------------------------------
+
+Welcome to Scrabble!
+--------------------
+
+Menu
+----
+1. New Game
+2. Load Game
+3. Credits (Show student information)
+4. Quit
+
+> 4
+
+Goodbye
