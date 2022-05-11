@@ -208,11 +208,12 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
          std::cout << std::endl;
          bingo = false;
          bingoCounter = 0;
-      }
-   
+         
       // Change turn state bool
       _player1->changeTurn();
       _player2->changeTurn();
+      }
+   
          
    }
    }
