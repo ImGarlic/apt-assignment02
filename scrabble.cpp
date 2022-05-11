@@ -85,7 +85,7 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    int bingoCounter = 0;
 
    // Ignore first input before cin
-   std::cin.ignore();
+   // std::cin.ignore();
    // Keep changing player turns until quit
    while (curOption != "Quit") {
       // Boolean array to track if a player passes twice
@@ -354,6 +354,7 @@ void newGame(Player* _player1, Player* _player2, LinkedList* tileBag, std::share
    _player2->createHand(tileBag);
    // Set turn to player 1
    _player1->turn = true;
+   std::cin.ignore();
 }
 
 void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt) {
@@ -378,7 +379,6 @@ void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
          std::cout << "File not found or invalid\n" << std::endl;
       }
    } while(!saveFile);
-   std::cout << "\nOpened save file: " << fileName << "\n" << std::endl;
 
    // Player 1 name and score
    saveFile >> (_player1)->name;
@@ -450,6 +450,7 @@ void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    else {
       _player2->turn = true;
    }
+   std::cout << "\nLoaded save file: " << fileName << "\n" << std::endl;
 }
 
 void saveGame(Player* _player1, Player* _player2, std::vector<std::vector<std::string>>* boardPtr, LinkedList* tileBag, std::string fileName) {
