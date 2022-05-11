@@ -145,7 +145,6 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
                }
                else {
                   curPlayer->placeTile(curOption[6], curOption[11], curOption.substr(12), boardPtr);
-                  std::cout << tile->letter << std::endl;
                   // Add tile to hand from bag
                   if (tileBag->peek() != NULL) {
                   curPlayer->hand->append(tileBag->pop());
