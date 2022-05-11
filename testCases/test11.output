@@ -11,29 +11,25 @@ Menu
 > 2
 
 Enter the filename from which to load a game
-> test3
-File not found or invalid
-
-Enter the filename from which to load a game
-> a
+> test11
 A
 
-Loaded save file: a
+Loaded save file: test11
 
 A, it's your turn
-Score for A: 0
-Score for B: 0
+Score for A: 5
+Score for B: 16
     0   1   2   3   4   5   6   7   8   9  10  11  12  13  14
   -------------------------------------------------------------
-A |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+A | V | Y | O | R | A | I | D |   |   |   |   |   |   |   |   |
 B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 C |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 D |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 E |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 F |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-G |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-H |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-I |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+G |   |   |   |   |   |   | B | A | R |   |   |   |   |   |   |
+H |   |   |   |   |   |   | U |   |   |   |   |   |   |   |   |
+I |   |   |   |   |   |   | S |   |   |   |   |   |   |   |   |
 J |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 K |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 L |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -42,32 +38,38 @@ N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 
 Your hand is
-B-3, S-1, Z-10, A-1, U-1, E-1, F-4
-> place B at G6
-B
-> place Done
+A-1, E-1, F-4, U-1, E-1, R-1, U-1
+> place A at O0
+> place E at O1
+> place F at O2
+> place U at O3
+> place E at O4
+> place R at O5
+> place U at O6
+
+BINGO!!!
 
 B, it's your turn
-Score for A: 3
-Score for B: 0
+Score for A: 15
+Score for B: 16
     0   1   2   3   4   5   6   7   8   9  10  11  12  13  14
   -------------------------------------------------------------
-A |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+A | V | Y | O | R | A | I | D |   |   |   |   |   |   |   |   |
 B |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 C |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 D |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 E |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 F |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-G |   |   |   |   |   |   | B |   |   |   |   |   |   |   |   |
-H |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-I |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+G |   |   |   |   |   |   | B | A | R |   |   |   |   |   |   |
+H |   |   |   |   |   |   | U |   |   |   |   |   |   |   |   |
+I |   |   |   |   |   |   | S |   |   |   |   |   |   |   |   |
 J |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 K |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 L |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+O | A | E | F | U | E | R | U |   |   |   |   |   |   |   |   |
 
 Your hand is
-R-1, T-1, V-4, Y-4, A-1, O-1, R-1
+N-1, U-1, E-1, I-1, N-1, A-1, L-1
 >
