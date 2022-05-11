@@ -104,9 +104,7 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
          printBoard(boardPtr);
          std::cout << std::endl;
          curPlayer->hand->print();
-         // Change turn state bool
-         _player1->changeTurn();
-         _player2->changeTurn();
+
          // Get user input
          std::cout << "> ";
          std::cin.clear();
@@ -211,6 +209,11 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
          bingo = false;
          bingoCounter = 0;
       }
+   
+      // Change turn state bool
+      _player1->changeTurn();
+      _player2->changeTurn();
+         
    }
    }
 
@@ -444,8 +447,10 @@ void loadGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
       } while(input.find(',') != std::string::npos);
    }
    // Get player turn
+   saveFile >> input;
    if(_player1->name == input) {
       _player1->turn = true;
+      std::cout << _player1->name << std::endl;
    }
    else {
       _player2->turn = true;
