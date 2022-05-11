@@ -1,5 +1,5 @@
 
-// g++ -Wall -Werror -std=c++14 -g -O -o main Tile.cpp Node.cpp LinkedList.cpp scrabble.cpp
+// g++ -Wall -Werror -std=c++14 -g -O -o main Tile.cpp Node.cpp LinkedList.cpp scrabble.cpp Player.cpp
 // ./main
 
 
@@ -219,8 +219,18 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
 bool inputCheck(std::string curOption) {
    int length = curOption.length();
    int loc = 0;
-
-   if (length == 9) {
+   
+   if (length == 4) {
+      if (curOption.find("pass") != std::string::npos) {
+         return true;
+      }
+   }
+   else if (curOption.find("save") != std::string::npos) {
+      if (curOption[4] == ' ') {  
+         return true;
+      }
+   }
+   else if (length == 9) {
       if (curOption.find("replace") != std::string::npos) {
          if (curOption[7] == ' ') {
             if (curOption[8] >= 'A' && curOption[8] <= 'Z') {
@@ -246,16 +256,7 @@ bool inputCheck(std::string curOption) {
          return true;
       }
    }
-   else if (length == 4) {
-      if (curOption.find("pass") != std::string::npos) {
-         return true;
-      }
-   }
-   else if (curOption.find("save") != std::string::npos) {
-      if (curOption[4] == ' ') {  
-         return true;
-      }
-   }
+
    return false;
 }
 
