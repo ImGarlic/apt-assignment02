@@ -75,6 +75,9 @@ int main(void) {
    // Enter playGame to play scrabble
    playGame(_player1, _player2, boardPtr, tileBag, curOpt);
    std::cout << "Goodbye" << std::endl;
+   delete tileBag;
+   delete _player1;
+   delete _player2;
    return EXIT_SUCCESS;
 }
 
