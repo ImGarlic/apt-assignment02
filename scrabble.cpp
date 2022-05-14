@@ -192,10 +192,13 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
                   curOption = "Quit";
                }
                else {
-                  while (!inputCheck(curOption)) {
+                  while (!inputCheck(curOption) && !std::cin.eof()) {
                      std::cout << "Invalid Input" << std::endl;
                      std::cout << "> ";
                      std::getline(std::cin, curOption);
+                     if (std::cin.eof()) {
+                        curOption = "Quit";
+                     }
                   }                     
                }
             }
