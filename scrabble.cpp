@@ -231,6 +231,11 @@ bool inputCheck(std::string curOption) {
    }
    else if (curOption.find("save") != std::string::npos) {
       if (curOption[4] == ' ') {  
+         for(int i = 5; i < int(curOption.length()); ++i) {
+            if(!isalpha(curOption[i]) && !isdigit(curOption[i])) {
+               return false;
+            }
+         }  
          return true;
       }
    }
