@@ -1,8 +1,4 @@
 
-// g++ -Wall -Werror -std=c++14 -g -O -o main Tile.cpp Node.cpp LinkedList.cpp scrabble.cpp Player.cpp
-// ./main
-
-
 #include "LinkedList.h"
 #include "Player.h"
 #include <iostream>
@@ -87,8 +83,6 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
    bool bingo = false;
    int bingoCounter = 0;
 
-   // Ignore first input before cin
-   // std::cin.ignore();
    // Keep changing player turns until quit
    while (curOption != "Quit") {
       // Boolean array to track if a player passes twice
@@ -218,10 +212,8 @@ void playGame(Player* _player1, Player* _player2, std::vector<std::vector<std::s
       _player1->changeTurn();
       _player2->changeTurn();
       }
-   
-         
    }
-   }
+}
 
 bool inputCheck(std::string curOption) {
    int length = curOption.length();
@@ -268,7 +260,6 @@ bool inputCheck(std::string curOption) {
          return true;
       }
    }
-
    return false;
 }
 
