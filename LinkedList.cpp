@@ -93,7 +93,7 @@ Tile* LinkedList::remove(Letter letter) {
       return this->pop();
    }
    // Traverse and search for letter
-   while(curNode->next != NULL) {
+   while(curNode != NULL) {
       if(curNode->tile->letter == letter) {
          // Letter found, remove node
          tile = curNode->tile;
