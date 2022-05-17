@@ -5,6 +5,7 @@
 #include "LinkedList.h"
 #include <iostream>
 #include <vector>
+#include <unordered_set>
 
 class Player {
 public:
@@ -20,13 +21,16 @@ public:
    void changeTurn();
    // Replace chosend tile in hand with tile from top of bag
    void replaceTile(LinkedList* tileBag, Letter letter);
-   // Place a tile on the board
-   void placeTile(char replaceLetter, char letter, std::string number, std::vector<std::vector<std::string>>* boardPtr);
+   // Check if a tile can be placed on the board
+   bool placeCheck(char letter, std::string pos, std::vector<std::vector<Tile*>>* boardPtr);
+   // Place word on board
+   bool placeWord(std::vector<Tile*> word, std::vector<std::vector<Tile*>>* boardPtr, char checker, std::unordered_set<std::string> wordList);
 
    std::string    name;
    int    score;
    bool turn;
    LinkedList* hand;
+   std::string colour;
 };
 
 #endif // ASSIGN2_PLAYER_H

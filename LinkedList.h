@@ -26,6 +26,9 @@ public:
    // Return tile at the front of the list
    Tile* peek();
 
+   // Find if letter exists in the list
+   Tile* get(Letter letter);
+
 private:
    Node* head;
 };

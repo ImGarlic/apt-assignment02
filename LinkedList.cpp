@@ -36,7 +36,6 @@ LinkedList::LinkedList(LinkedList& other) {
 
 void LinkedList::print() {
    Node* curNode = head;
-   std::cout << "Your hand is" << std::endl;
    // Base case, list is empty
    if(head == nullptr) {
       std::cout << "empty lol" << std::endl;
@@ -111,4 +110,20 @@ Tile* LinkedList::peek() {
       return NULL;
    }
    return this->head->tile;
+}
+
+Tile* LinkedList::get(Letter letter) {
+   Node* curNode = head;
+   Tile* tile = NULL;
+
+   // Traverse and search for letter
+   while(curNode != NULL) {
+      if(curNode->tile->letter == letter) {
+         // Letter found
+         tile = curNode->tile;
+         return tile;
+      }
+      curNode = curNode->next;
+   }
+   return NULL;
 }
