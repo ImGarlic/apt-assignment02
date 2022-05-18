@@ -31,6 +31,8 @@ public:
    bool turn;
    LinkedList* hand;
    std::string colour;
+   // number of times a player passes
+   int pass;
 };
 
 #endif // ASSIGN2_PLAYER_H

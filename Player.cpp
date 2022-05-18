@@ -10,10 +10,11 @@ Player::Player() {
     hand = new LinkedList();
     turn = false;
     score = 0;
+    pass = 0;
 }
 
 Player::~Player() {
-
+    delete hand;
 }
 
 void Player::setName(std::string name) {
@@ -93,61 +94,86 @@ bool Player::placeWord(std::vector<Tile*> word, std::vector<std::vector<Tile*>>*
     std::string curWord = "";
     Tile* curTile;
     std::vector<std::string> boardWords;
+    bool reading;
     // Check tiles around positions for existing words on the board
     for (Tile* tile : word) {
         int row = tile->row;
         int col = tile->col;
         curTile = tile;
+        reading = true;
+        curWord = "";
         // Check vertical
         // Go all the way up
-        while (row - 1 >= 0 && boardPtr->at(row - 1).at(col) != NULL) {
+        while (row >= 0) {
+            if (boardPtr->at(row).at(col) == NULL) {
+                reading= false;
+            }
+            if (reading) {
+                curTile = boardPtr->at(row).at(col);
+            }
             row -= 1;
-            curTile = boardPtr->at(row).at(col);
         }
+        row = curTile->row;
+        reading = true;
         // Go back down and make tiles into a word
-        while (row + 1 < 15 && curTile != NULL) {
-            curWord += curTile->letter;
+        while (row <= 14) {
+            if (boardPtr->at(row).at(col) == NULL) {
+                reading = false;
+            }
+            if (reading) {
+                curTile = boardPtr->at(row).at(col);
+                curWord += curTile->letter;
+            }
             row += 1;
-            curTile = boardPtr->at(row).at(col);
         }
-        if (curWord != "") {
-            boardWords.push_back(curWord);
-        }
+        // Lowercase for checking
+        std::transform(curWord.begin(), curWord.end(), curWord.begin(), [](unsigned char c){ return std::tolower(c); });
+        boardWords.push_back(curWord);
+        // Reset
         curWord = "";
         curTile = tile;
         row = tile->row;
-         // Check horizontal
-         // Go all the way left
-        while (col - 1 >= 0 && boardPtr->at(row).at(col - 1) != NULL) {
-            std::cout << curTile->letter << std::endl;
+        col = tile->col;
+        reading = true;
+
+        // Check horizontal
+        // Go all the way left
+        while (col >= 0) {
+            if (boardPtr->at(row).at(col) == NULL) {
+                reading = false;
+            }
+            if (reading) {
+                curTile = boardPtr->at(row).at(col);
+            }
             col -= 1;
-            curTile = boardPtr->at(row).at(col);
-        } // Go back down and make tiles into a word
-        while (row + 1 < 15 && curTile != NULL) {
-            curWord += curTile->letter;
+        }
+        col = curTile->col;
+        reading = true;
+        // Go back right and make tiles into a word
+        while (col <= 14) {
+            if (boardPtr->at(row).at(col) == NULL) {
+                reading = false;
+            }
+            if (reading) {
+                curTile = boardPtr->at(row).at(col);
+                curWord += curTile->letter;
+            }
             col += 1;
-            curTile = boardPtr->at(row).at(col);
         }
-        if (curWord != "") {
-            boardWords.push_back(curWord);
-        }
-        curWord = "";
-    }
-    if ((std::find(boardWords.begin(), boardWords.end(), curWord) == boardWords.end()) && curWord != "") {
+        // Lowercase for checking
+        std::transform(curWord.begin(), curWord.end(), curWord.begin(), [](unsigned char c){ return std::tolower(c); });
         boardWords.push_back(curWord);
-    }
-    for(std::string i : boardWords) {
-        std::cout << i << "." << std::endl;
     }
     // Check if all words exist in word list
     for (std::string j : boardWords) {
-        // Convert to lowercase
-        std::transform(j.begin(), j.end(), j.begin(), [](unsigned char c){ return std::tolower(c); });
         // Check list
         if(wordList.find(j) == wordList.end()) {
-            std::cout << j << " does not exist in the Scrabble Dictionary.\nPlease try again." << std::endl;
-            return false;
+            if (wordList.find(j) == wordList.end()) {
+                std::cout << j << " does not exist in the Scrabble Dictionary.\nPlease try again." << std::endl;
+                return false;
+            }
         }
     }
+    score += tempScore;
     return true;
 }

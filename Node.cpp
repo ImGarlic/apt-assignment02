@@ -15,4 +15,7 @@ Node::Node(Node& other)
 
 Node::~Node() {
    delete this->tile;
+   if (this->next != NULL) {
+      delete this->next;
+   }
 }

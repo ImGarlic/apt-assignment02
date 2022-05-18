@@ -13,13 +13,15 @@
 #define EXIT_SUCCESS    0
 
 void printMenu();
-void newGame(Player* player1, Player* player2, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, char** argv);
-void loadGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt);
-void saveGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::string fileName);
-void playGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, char** argv);
+void newGame(Player* player1, Player* player2, Player* player3, Player* player4, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, char** argv);
+void loadGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt);
+void saveGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::string fileName);
+void playGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, char** argv);
+void getNewPlayer(Player* player, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, int playerNum);
+void readHand(Player* player, std::string input);
 void printBoard(std::vector<std::vector<Tile*>>* boardPtr);
-void printNameAndScore(Player* player1, Player* player2);
-void endGame(Player* player1, Player* player2);
+void printNameAndScore(Player* player1, Player* player2, Player* player3, Player* player4);
+void endGame(Player* player1, Player* player2, Player* player3, Player* player4);
 bool inputCheck(std::string curOption);
 bool betterInputCheck(std::string curOption);
 LinkedList* createTileBag();
@@ -31,12 +33,12 @@ int main(int argc, char** argv) {
    std::string option = "0";
    
    // Check for milestone 2 or 3
-   if (argc < 5) {
+   if (argc < 6) {
       std::cout << "\nProgram terminated.\n"
                << "Please type y/n for each enhancement:\n"
-               << "> ./scrabble <Help!> <Better Invalid Input> <Colour>\n"
+               << "> ./scrabble <Help!> <Better Invalid Input> <Colour> <Word Checking> <3/4 Player>\n"
                << "\nFor example:\n"
-               << "> ./scrabble y y n y\n"
+               << "> ./scrabble y y n y n\n"
       << std::endl;
       return EXIT_SUCCESS;
    }
@@ -45,6 +47,8 @@ int main(int argc, char** argv) {
    // Allocate memory for players
    Player* player1 = new Player;
    Player* player2 = new Player;
+   Player* player3 = new Player;
+   Player* player4 = new Player;
    // A 2D Vector that will serve as the board
    std::vector<std::vector<Tile*>> board(15,std::vector<Tile*>(15, NULL));
    std::vector<std::vector<Tile*>> *boardPtr = &board;
@@ -65,11 +69,11 @@ int main(int argc, char** argv) {
       std::cout << std::endl;
       // Make new game
       if (option == "1") {
-         newGame(player1, player2, tileBag, curOpt, argv);
+         newGame(player1, player2, player3, player4, tileBag, curOpt, argv);
       }
       // Load a game from a save file
       else if (option == "2") {
-         loadGame(player1, player2, boardPtr, tileBag, curOpt);
+         loadGame(player1, player2, player3, player4, boardPtr, tileBag, curOpt);
       }
       // Show credits
       else if (option == "3") {
@@ -86,21 +90,27 @@ int main(int argc, char** argv) {
    if (*argv[3] == 'y') {
       player1->colour = "\u001b[31m";
       player2->colour = "\u001b[36m";
+      player3->colour = "\u001b[33m";
+      player4->colour = "\u001b[32m";
    }
    else {
       player1->colour = "\u001b[0m";
       player2->colour = "\u001b[0m";
+      player3->colour = "\u001b[0m";
+      player4->colour = "\u001b[0m";
    }
    // Enter playGame to play scrabble
-   playGame(player1, player2, boardPtr, tileBag, curOpt, argv);
+   playGame(player1, player2, player3, player4, boardPtr, tileBag, curOpt, argv);
    std::cout << "Goodbye" << std::endl;
    delete tileBag;
    delete player1;
    delete player2;
+   delete player3;
+   delete player4;
    return EXIT_SUCCESS;
 }
 
-void playGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, char** argv) {
+void playGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, char** argv) {
    Player* curPlayer;
    std::string letter;
    std::vector<Tile*> word;
@@ -117,148 +127,206 @@ void playGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>*
 
    // Keep changing player turns until quit
    while (curOption != "Quit") {
-      // Boolean array to track if a player passes twice
-      bool passTracker[4] = {false};
-      // For loop running 4 times to alternate between players turns and track if a player passes twice
-      for (int i = 0; i < 4 && curOption != "Quit"; i++) { 
-         // If statements to set the current players information
-         if ((player1)->turn) {
-            curPlayer = player1;
+      // If statements to set the current players information
+      if ((player1)->turn) {
+         curPlayer = player1;
+      }
+      else if (player2->turn) {
+         curPlayer = player2;
+      }
+      else if (player3->turn) {
+         curPlayer = player3;
+      }
+      else {
+         curPlayer = player4;
+      }
+      // Print the name, score, board and hand
+      printNameAndScore(player1, player2, player3, player4);
+      printBoard(boardPtr);
+
+      std::cout << "\nYour hand is" << std::endl;
+      // Add some colour!
+      std::cout << curPlayer->colour;
+      curPlayer->hand->print();
+      std::cout << "\u001b[0m";
+
+      std::cin.clear();
+      std::cin.sync();
+
+      // Set curOption to player input switch
+      curOption = "next";
+      // Enter a do while loop after getting user input and running the command according to user input
+      do {
+         // If user input is a replace command
+         if (curOption.find("replace") != std::string::npos) {
+            curPlayer->replaceTile(tileBag, curOption[8]);
+            curOption = "done";
          }
-         else {
-            curPlayer = player2;
+         else if (curOption.find("place Done") != std::string::npos) {
+            bool placed;
+            if (*argv[4] == 'y') {
+               placed = curPlayer->placeWord(word, boardPtr, 'y', wordList);
+            }
+            else {
+               placed = curPlayer->placeWord(word, boardPtr, 'n', wordList);
+            }
+            // If placing word fails, clear board, reset tile pos and append back to player hand
+            if (!placed) {
+               for (Tile* tile : word) {
+                  boardPtr->at(tile->row).at(tile->col) = NULL;
+                  tile->setPos("reset");
+                  curPlayer->hand->append(tile);
+               }
+               curOption = "next";
+            }
+            // If placing succeeds, append correct number of tiles from bag
+            else {
+               for (int i = 0; i < int(word.size()); ++i) {
+                  if (tileBag->peek() != NULL) {
+                     curPlayer->hand->append(tileBag->pop());
+                  }
+               }
+               // If player enters all 7 tiles from their hand, print bingo 
+               if (bingoCounter == 7) {
+                  std::cout << std::endl;
+                  std::cout << "BINGO!!!" << std::endl;
+                  curPlayer->score += 50;
+               }
+               curOption = "done";
+            }
+            // Clear word
+            word.clear();
+         }            
+         else if (curOption.find("help") != std::string::npos) {
+            if (*argv[1] == 'y') {
+               help();
+               curOption = "next";
+            }
+            else {
+               std::cout << "Invalid input" << std::endl;
+               curOption = "next";
+            }
          }
-         // Print the name, score, board and hand
-         printNameAndScore(player1, player2);
-         printBoard(boardPtr);
-
-         std::cout << "\nYour hand is" << std::endl;
-         // Add some colour!
-         std::cout << curPlayer->colour;
-         curPlayer->hand->print();
-         std::cout << "\u001b[0m";
-
-         std::cin.clear();
-         std::cin.sync();
-
-         // If a player passes, record it in the boolean array
+         // If user input is a place command
+         else if (curOption.find("place") != std::string::npos) {
+            Tile* tile;
+            if (curPlayer->placeCheck(curOption[6], curOption.substr(11), boardPtr)) {
+               bingoCounter += 1;
+               // Set the position of tile after removing from player hand, add to "word" vector before placing
+               tile = curPlayer->hand->remove(curOption[6]);
+               tile->setPos(curOption.substr(11));
+               word.push_back(tile);
+            }
+            curOption = "next";
+         }
+         // If user input is a save command
+         else if (curOption.find("save") != std::string::npos) {
+            std::string fileName = "saveFiles/" + curOption.substr(5) + ".save";
+            saveGame(player1, player2, player3, player4, boardPtr, tileBag, fileName);
+            curOption = "next";
+         }
+         // If command does not signal end of turn
+         else if (curOption == "next") {
+            std::cout << "> ";
+            std::getline(std::cin, curOption);
+            if (std::cin.eof()) {
+               curOption = "Quit";
+            }
+            if (*argv[2] == 'y') {
+               while (!betterInputCheck(curOption) && !std::cin.eof()) {
+                  std::cout << "> ";
+                  std::getline(std::cin, curOption);
+                  if (std::cin.eof()) {
+                     curOption = "Quit";
+                  }
+               }     
+            }
+            else {
+               while (!inputCheck(curOption) && !std::cin.eof()) {
+                  std::cout << "> ";
+                  std::getline(std::cin, curOption);
+                  if (std::cin.eof()) {
+                     curOption = "Quit";
+                  }
+               }        
+            }       
+         }
+         // If a player passes, increase consecutive turns passed
          if (curOption == "pass") {
-            passTracker[i] = true;
+            curPlayer->pass += 1;
             // If player passes halfway through placing a word
             if(bingoCounter != 0) {
                word.clear();
             }
          }
-         // Set curOption to player input switch
-         curOption = "next";
-         // Enter a do while loop after getting user input and running the command according to user input
-         do {
-            // If user input is a replace command
-            if (curOption.find("replace") != std::string::npos) {
-               curPlayer->replaceTile(tileBag, curOption[8]);
-               curOption = "done";
-            }
-            else if (curOption.find("place Done") != std::string::npos) {
-               bool placed;
-               if (*argv[4] == 'y') {
-                  placed = curPlayer->placeWord(word, boardPtr, 'y', wordList);
-               }
-               else {
-                  placed = curPlayer->placeWord(word, boardPtr, 'n', wordList);
-               }
-               // If placing word fails, clear board, reset tile pos and append back to player hand
-               if (!placed) {
-                  for (Tile* tile : word) {
-                     boardPtr->at(tile->row).at(tile->col) = NULL;
-                     tile->setPos("reset");
-                     curPlayer->hand->append(tile);
-                  }
-                  curOption = "next";
-               }
-               // If placing succeeds, append correct number of tiles from bag
-               else {
-                  for (int i = 0; i < int(word.size()); ++i) {
-                     curPlayer->hand->append(tileBag->pop());
-                  }
-                  // If player enters all 7 tiles from their hand, print bingo 
-                  if (bingoCounter == 7) {
-                     std::cout << std::endl;
-                     std::cout << "BINGO!!!" << std::endl;
-                     curPlayer->score += 50;
-                  }
-                  curOption = "done";
-               }
-               // Clear word
-               word.clear();
-            }            
-            else if (curOption.find("help") != std::string::npos) {
-               if (*argv[1] == 'y') {
-                  help();
-                  curOption = "next";
-               }
-               else {
-                  std::cout << "Invalid input" << std::endl;
-                  curOption = "next";
-               }
-            }
-            // If user input is a place command
-            else if (curOption.find("place") != std::string::npos) {
-               Tile* tile;
-               if (curPlayer->placeCheck(curOption[6], curOption.substr(11), boardPtr)) {
-                  bingoCounter += 1;
-                  // Set the position of tile after removing from player hand, add to "word" vector before placing
-                  tile = curPlayer->hand->remove(curOption[6]);
-                  tile->setPos(curOption.substr(11));
-                  word.push_back(tile);
-               }
-               curOption = "next";
-            }
-            // If user input is a save command
-            else if (curOption.find("save") != std::string::npos) {
-               std::string fileName = "saveFiles/" + curOption.substr(5) + ".save";
-               saveGame(player1, player2, boardPtr, tileBag, fileName);
-               curOption = "next";
-            }
-            // If command does not signal end of turn
-            else if (curOption == "next") {
-               std::cout << "> ";
-               std::getline(std::cin, curOption);
-               if (std::cin.eof()) {
-                  curOption = "Quit";
-               }
-               if (*argv[2] == 'y') {
-                  while (!betterInputCheck(curOption) && !std::cin.eof()) {
-                     std::cout << "> ";
-                     std::getline(std::cin, curOption);
-                     if (std::cin.eof()) {
-                        curOption = "Quit";
-                     }
-                  }     
-               }
-               else {
-                  while (!inputCheck(curOption) && !std::cin.eof()) {
-                     std::cout << "> ";
-                     std::getline(std::cin, curOption);
-                     if (std::cin.eof()) {
-                        curOption = "Quit";
-                     }
-                  }        
-               }       
-            }
          // Conditional checks   
-         } while (curOption != "pass" && curOption != "Quit" && curOption != "done");
-         // End the game if tile bag is empty, a player has no more tiles in their hand or a player passes twice
+      } while (curOption != "pass" && curOption != "Quit" && curOption != "done");
+      // End the game if tile bag is empty, a player has no more tiles in their hand or a player passes twice
+      if (player4->name != "") {
+         if ((tileBag->peek() == NULL) && ((player1->hand->peek() == NULL) || (player2->hand->peek() == NULL) || (player3->hand->peek() == NULL) || 
+         (player4->hand->peek() == NULL) || (curPlayer->pass == 2))) {
+         endGame(player1, player2, player3, player4);
+         curOption = "Quit";
+         }
+      }
+      else if (player3->name != "") {
+         if ((tileBag->peek() == NULL) && ((player1->hand->peek() == NULL) || (player2->hand->peek() == NULL) || (player3->hand->peek() == NULL) ||
+          (curPlayer->pass == 2))) {
+         endGame(player1, player2, player3, player4);
+         curOption = "Quit";
+         }
+      }
+      else {
          if ((tileBag->peek() == NULL) && ((player1->hand->peek() == NULL) || (player2->hand->peek() == NULL) ||
-             (passTracker[0] == true && passTracker[2] == true) || (passTracker[1] == true and passTracker[3] == true))) {
-            endGame(player1, player2);
+            (curPlayer->pass == 2))) {
+            endGame(player1, player2, player3, player4);
             curOption = "Quit";
          }
-         std::cout << std::endl;
-         bingoCounter = 0;
-         
+      }
+      
+      std::cout << std::endl;
+      bingoCounter = 0;
+      // Check if a turn was not passed
+      if (curOption == "done") {
+         curPlayer->pass = 0;
+      }
+
       // Change turn state bool
-      player1->changeTurn();
-      player2->changeTurn();
+      if (player4->name != "") {
+         if (player1->turn) {
+            player1->changeTurn();
+            player2->changeTurn();
+         }
+         else if (player2->turn) {
+            player2->changeTurn();
+            player3->changeTurn();
+         }
+         else if (player3->turn) {
+            player3->changeTurn();
+            player4->changeTurn();
+         }
+         else {
+            player4->changeTurn();
+            player1->changeTurn();
+         }
+      }
+      else if (player3->name != "") {
+         if (player1->turn) {
+            player1->changeTurn();
+            player2->changeTurn();
+         }
+         else if (player2->turn) {
+            player2->changeTurn();
+            player3->changeTurn();
+         }
+         else if (player3->turn) {
+            player3->changeTurn();
+            player1->changeTurn();
+         }
+      }
+      else {
+         player1->changeTurn();
+         player2->changeTurn();
       }
    }
 }
@@ -359,32 +427,61 @@ bool betterInputCheck(std::string curOption) {
    return false;
 }
 
-void endGame(Player* player1, Player* player2) {
+void endGame(Player* player1, Player* player2, Player* player3, Player* player4) {
    std::cout << std::endl;
    std::cout << "Game over\n" <<
-                "Score for " << player1->name << ": " << player1->score <<
-                "\nScore for " << player2->name << ": " << player2->score << 
-   std::endl;
-   if (player1->score > player2->score) {
-      std::cout << "Player " << player1->name << " won!" << std::endl;
+                "Score for " << player1->colour << player1->name << "\u001b[0m: " << player1->score <<
+                "\nScore for " << player2->colour << player2->name << "\u001b[0m: " << player2->score << std::endl;
+   if (player3->name != "") {
+      std::cout << "Score for " << player3->colour << player3->name << "\u001b[0m: " << player3->score << std::endl;
    }
-   else if (player1->score < player2->score) {
-      std::cout << "Player " << player2->name << " won!" << std::endl;
+   if (player4->name != "") {
+      std::cout << "Score for " << player4->colour << player4->name << "\u001b[0m: " << player4->score << std::endl;
+   }
+
+   // Find highest score
+   std::vector<Player*> players = {player1, player2, player3, player4};
+   Player* bestPlayer = new Player();
+   for(Player* player : players) {
+      if (player->score > bestPlayer->score) {
+         bestPlayer = player;
+      }
+   }
+   if (player4->name != "" && (bestPlayer->score * 4) == (player1->score + player2->score + player3->score + player4->score)) {
+      std::cout << "It's a draw!" << std::endl; 
+   }
+   else if (player3->name != "" && (bestPlayer->score * 3) == (player1->score + player2->score + player3->score)) {
+      std::cout << "It's a draw!" << std::endl;
+   }
+   else if ((bestPlayer->score * 2) == (player1->score + player2->score)) {
+      std::cout << "It's a draw!" << std::endl; 
    }
    else  {
-      std::cout << "It's a draw!" << std::endl; 
+      std::cout << "Player " << bestPlayer->colour << bestPlayer->name << "\u001b[0m won!" << std::endl;
    }
 }
 
-void printNameAndScore(Player* player1, Player* player2) {
+void printNameAndScore(Player* player1, Player* player2, Player* player3, Player* player4) {
    if(player1->turn) {
       std::cout << player1-> colour << player1->name << "\u001b[0m, it's your turn" << std::endl;
    }
-   else {
+   else if (player2->turn) {
       std::cout << player2-> colour << player2->name << "\u001b[0m, it's your turn" << std::endl;
+   }
+   else if (player3->turn) {
+      std::cout << player3-> colour << player3->name << "\u001b[0m, it's your turn" << std::endl;
+   }
+   else {
+      std::cout << player4-> colour << player4->name << "\u001b[0m, it's your turn" << std::endl;
    }
    std::cout << "Score for " << player1-> colour << player1->name << "\u001b[0m: " << player1->score << std::endl;
    std::cout << "Score for " << player2-> colour << player2->name << "\u001b[0m: " << player2->score << std::endl;
+   if (player3->name != "") {
+      std::cout << "Score for " << player3-> colour << player3->name << "\u001b[0m: " << player3->score << std::endl;
+   }
+   if (player4->name!= "") {
+      std::cout << "Score for " << player4-> colour << player4->name << "\u001b[0m: " << player4->score << std::endl;
+   }
 }
 
 void printBoard(std::vector<std::vector<Tile*>>* boardPtr) {
@@ -416,57 +513,71 @@ std::cout << "Menu\n"
 << std::endl;
 }
 
-void newGame(Player* player1, Player* player2, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, char** argv) {
+void newGame(Player* player1, Player* player2, Player* player3, Player* player4, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, char** argv) {
    std::string input;
+   int numPlayers = 0;
    std::cout << "Starting a New Game\n" << std::endl;
+   // Generate tile bag
+   *tileBag = *createTileBag();
+   // 3/4 player option
+   if (*argv[5] == 'y') {
+      do {
+         if (std::cin.eof()) {
+            *curOpt = "Quit";
+            return;
+         }
+         std::cout << "Enter the number of players (3/4):\n"
+                  << "> ";
+         std::cin >> input;
+      } while (input < "3" || input > "4");
+      numPlayers = stoi(input);
+   }
 
-   // Set player 1 name
-   do {
-      if (std::cin.eof()) {
-         *curOpt = "Quit";
-         return;
-      }
-      std::cout << "Enter a name for player 1\n"
-               << "> ";
-      std::cin >> input;
-      if (!(std::all_of((input).begin(), (input).end(), [](unsigned char c){ return std::isupper(c); }))) {
-         std::cout << "Name must be uppercase characters only.\n" << std::endl;
-      }
-   } while(!(std::all_of((input).begin(), (input).end(), [](unsigned char c){ return std::isupper(c); })));
-   std::cout << std::endl;
-   player1->setName(input);
+   // Set player 1 name and hand
+   getNewPlayer(player1, tileBag, curOpt, 1);
 
-   // Set player 2 name
-   do {
-      if (std::cin.eof()) {
-         *curOpt = "Quit";
-         return;
-      }
-      std::cout << "Enter a name for player 2\n"
-               << "> ";
-      std::cin >> input;
-      std::cout << std::endl;
-      if (!(std::all_of((input).begin(), (input).end(), [](unsigned char c){ return std::isupper(c); }))) {
-         std::cout << "Name must be uppercase characters only.\n" << std::endl;
-      }
-   } while(!(std::all_of((input).begin(), (input).end(), [](unsigned char c){ return std::isupper(c); })));
-   player1->setName(input);
-   
+   // Set player 2 name and hand
+   getNewPlayer(player2, tileBag, curOpt, 2);
+
+   if (numPlayers > 2) {
+      // Set player 3 name and hand
+      getNewPlayer(player3, tileBag, curOpt, 3);
+   }
+   if (numPlayers > 3) {
+      // Set player 4 name and hand
+      getNewPlayer(player4, tileBag, curOpt, 4);
+   }
    std::cout << "\nLet's Play!\n" << std::endl;
 
-   // Generate new tile bag and player hands
-   *tileBag = *createTileBag();
-   player1->createHand(tileBag);
-   player2->createHand(tileBag);
    // Set turn to player 1
    player1->turn = true;
    std::cin.ignore();
 }
 
-void loadGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt) {
+void getNewPlayer(Player* player, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, int playerNum) {
+   std::string input;
+   do {
+      if (std::cin.eof()) {
+         *curOpt = "Quit";
+         return;
+      }
+      std::cout << "Enter a name for player " << playerNum
+               << "\n> ";
+      std::cin >> input;
+      if (!(std::all_of((input).begin(), (input).end(), [](unsigned char c){ return std::isupper(c); }))) {
+         std::cout << "Name must be uppercase characters only.\n" << std::endl;
+      }
+      } while(!(std::all_of((input).begin(), (input).end(), [](unsigned char c){ return std::isupper(c); })));
+      player->setName(input);
+      player->createHand(tileBag);
+}
+
+void loadGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt) {
    std::string fileName;
    std::ifstream saveFile;   
    std::string input;
+   std::string line;
+   int numPlayers = 0;
    Tile* tile = NULL;
 
    // Get file name
@@ -486,20 +597,20 @@ void loadGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>*
       }
    } while(!saveFile);
 
-   // Player 1 name and score
-   saveFile >> (player1)->name;
+   getline(saveFile, line);
+   if (line[0] == '#') { // If 3/4 player
+      saveFile >> (player1)->name;
+      numPlayers = line[1] - '0';
+   }
+   else { // Default
+      (player1)->name = line;
+   }
+   // Player 1 score
    saveFile >> (player1)->score;
    // Player 1 hand
    do {
       saveFile >> input;
-      // Exception for literally just the letters Z and Q
-      if(input.length() == 5) {
-         tile = new Tile(input[0], std::stoi(input.substr(2,3)));
-      }
-      else {
-         tile = new Tile(input[0], input[2] - '0');
-      }
-      player1->hand->append(tile);
+      readHand(player1, input);
    } while(input.find(',') != std::string::npos);
 
    // Player 2 name and score
@@ -509,18 +620,33 @@ void loadGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>*
    input = "resetting";
    do {
       saveFile >> input;
-      // Exception for literally just the letters Z and Q
-      if(input.length() == 5) {
-         tile = new Tile(input[0], std::stoi(input.substr(2,3)));
-      }
-      else {
-         tile = new Tile(input[0], input[2] - '0');
-      }
-      player2->hand->append(tile);
+      readHand(player2, input);
    } while(input.find(',') != std::string::npos);
 
+   if (numPlayers > 2) {
+      // Player 3 name and score
+      saveFile >> (player3)->name;
+      saveFile >> (player3)->score;
+      // Player 3 hand
+      input = "resetting";
+      do {
+         saveFile >> input;
+         readHand(player3, input);
+      } while(input.find(',') != std::string::npos);
+   }
+   if (numPlayers > 3) {
+      // Player 4 name and score
+      saveFile >> (player4)->name;
+      saveFile >> (player4)->score;
+      // Player 4 hand
+      input = "resetting";
+      do {
+         saveFile >> input;
+         readHand(player4, input);
+      } while(input.find(',') != std::string::npos);
+   }
+
    // Set getline to first row of board
-   std::string line;
    for(int i = 0; i < 3; ++i) {
       std::getline(saveFile, line);
    }
@@ -534,6 +660,8 @@ void loadGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>*
          }
          else {
             boardPtr->at(i).at(j - 1) = new Tile(input[0], 0);
+            boardPtr->at(i).at(j - 1)->row = i;
+            boardPtr->at(i).at(j - 1)->col = j - 1;
          }
       }
    }
@@ -541,7 +669,7 @@ void loadGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>*
    input = "resetting";
    saveFile >> input;
    // Check if tileBag not empty
-   if(input.find(',') != std::string::npos) {
+   if(input.find('-') != std::string::npos) {
       do {
          // Exception for literally just the letters Z and Q
          if(input.length() == 5) {
@@ -559,18 +687,44 @@ void loadGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>*
    if(player1->name == input) {
       player1->turn = true;
    }
-   else {
+   else if (player2->name == input) {
       player2->turn = true;
+   }
+   else if (player3->name == input) {
+      player3->turn = true;
+   }
+   else {
+      player4->turn = true;
    }
    std::cout << "\nLoaded save file: " << fileName << "\n" << std::endl;
 }
 
-void saveGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::string fileName) {
+void readHand(Player* player, std::string input) {
+   Tile* tile;
+   // Exception for literally just the letters Z and Q
+   if(input.length() == 5) {
+      tile = new Tile(input[0], std::stoi(input.substr(2,3)));
+   }
+   else {
+      tile = new Tile(input[0], input[2] - '0');
+   }
+   player->hand->append(tile);
+}
+
+void saveGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::string fileName) {
    std::ofstream saveFile(fileName);
    Tile* tile = NULL;
    LinkedList* player1HandCopy = new LinkedList(*player1->hand);
    LinkedList* player2HandCopy = new LinkedList(*player2->hand);
    LinkedList* tileBagCopy = new LinkedList(*tileBag);
+
+   // If more than 2 player
+   if (player4->name != "") {
+      saveFile << "#4 player" << std::endl;
+   }
+   else if (player3->name != "") {
+      saveFile << "#3 player" << std::endl;
+   }
 
    // Write player 1 name and score
    saveFile << player1->name << std::endl;
@@ -586,8 +740,8 @@ void saveGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>*
          saveFile << tile->letter << "-" << tile->value << ", ";
       }
       delete tile;
-   }
-   while(player1HandCopy->peek() != NULL);
+   } while(player1HandCopy->peek() != NULL);
+
    // Write player2 name and score
    saveFile << player2->name << std::endl;
    saveFile << player2->score << std::endl;
@@ -602,8 +756,47 @@ void saveGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>*
          saveFile << tile->letter << "-" << tile->value << ", ";
       }
       delete tile;
+   } while(player2HandCopy->peek() != NULL);
+
+   // If player3 exists, write
+   if (player3->name != "") {
+      LinkedList* player3HandCopy = new LinkedList(*player3->hand);
+      // Write player 3
+      saveFile << player3->name << std::endl;
+      saveFile << player3->score << std::endl;
+      // Write player2 hand
+      do {
+         tile = new Tile(*player3HandCopy->pop());
+         // Check for last tile
+         if(player3HandCopy->peek() == NULL) {
+            saveFile << tile->letter << "-" << tile->value << std::endl;
+         }
+         else {
+            saveFile << tile->letter << "-" << tile->value << ", ";
+         }
+         delete tile;
+      } while(player3HandCopy->peek() != NULL);
    }
-   while(player2HandCopy->peek() != NULL);
+   // If player4 exists, write
+   if (player4->name != "") {
+      LinkedList* player4HandCopy = new LinkedList(*player4->hand);
+      // Write player 3
+      saveFile << player4->name << std::endl;
+      saveFile << player4->score << std::endl;
+      // Write player2 hand
+      do {
+         tile = new Tile(*player4HandCopy->pop());
+         // Check for last tile
+         if(player4HandCopy->peek() == NULL) {
+            saveFile << tile->letter << "-" << tile->value << std::endl;
+         }
+         else {
+            saveFile << tile->letter << "-" << tile->value << ", ";
+         }
+         delete tile;
+      } while(player4HandCopy->peek() != NULL);
+   }
+
    // Write the board state
    saveFile << "    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  " << std::endl;
    saveFile << "  -------------------------------------------------------------" << std::endl;
@@ -643,8 +836,14 @@ void saveGame(Player* player1, Player* player2, std::vector<std::vector<Tile*>>*
    if(player1->turn) {
       saveFile << player1->name;
    }
-   else {
+   else if (player2->turn) {
       saveFile << player2->name;
+   }
+   else if (player3->turn) {
+      saveFile << player3->name;
+   }
+   else {
+      saveFile << player4->name;
    }
    std::cout << "Successfully saved game to " << fileName << std::endl;
 

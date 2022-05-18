@@ -8,19 +8,7 @@ LinkedList::LinkedList() {
 }
 
 LinkedList::~LinkedList() {
-   Node* curNode = head;
-   Node* temp;
-   // Base case, list empty
-   if(head == nullptr) {
-      return;
-   }
-   // Delete nodes one by one
-   while(curNode->next != NULL) {
-      temp = curNode;
-      curNode = curNode->next;
-      delete temp;
-   }
-   delete curNode;
+   delete head;
 }
 
 LinkedList::LinkedList(LinkedList& other) {
