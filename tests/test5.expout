@@ -1,0 +1,69 @@
+Welcome to Scrabble!
+--------------------
+
+Menu
+----
+1. New Game
+2. Load Game
+3. Credits (Show student information)
+4. Quit
+
+> 
+Enter the filename from which to load a game
+> 
+Loaded save file: test5
+
+[31mA[0m, it's your turn
+Score for [31mA[0m: 5
+Score for [36mB[0m: 2
+Score for [33mC[0m: 6
+    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  
+  -------------------------------------------------------------
+A | [0mM[0m | [0mE[0m | [0mT[0m |   |   |   |   |   |   |   |   |   |   |   |   |
+B |   |   | [0mA[0m |   |   |   |   |   |   |   |   |   |   |   |   |
+C |   |   | [0mN[0m | [0mO[0m | [0mV[0m | [0mA[0m |   |   |   |   |   |   |   |   |   |
+D |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+E |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+F |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+G |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+H |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+I |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+J |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+K |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+L |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+
+Your hand is
+[31mJ-8, R-1, R-1, N-1, O-1, U-1, Y-4
+[0m> > > ajn does not exist in the Scrabble Dictionary.
+Please try again.
+> > > 
+[36mB[0m, it's your turn
+Score for [31mA[0m: 7
+Score for [36mB[0m: 2
+Score for [33mC[0m: 6
+    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  
+  -------------------------------------------------------------
+A | [0mM[0m | [0mE[0m | [0mT[0m |   |   |   |   |   |   |   |   |   |   |   |   |
+B |   |   | [0mA[0m |   |   |   |   |   |   |   |   |   |   |   |   |
+C |   |   | [0mN[0m | [0mO[0m | [0mV[0m | [0mA[0m |   |   |   |   |   |   |   |   |   |
+D |   |   |   |   |   | [31mR[0m |   |   |   |   |   |   |   |   |   |
+E |   |   |   |   |   | [31mN[0m |   |   |   |   |   |   |   |   |   |
+F |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+G |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+H |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+I |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+J |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+K |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+L |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+M |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+
+Your hand is
+[36mF-4, Z-10, T-1, V-4, R-1, S-1, O-1
+[0m> Successfully saved game to saveFiles/test6.save
+> 
+Goodbye

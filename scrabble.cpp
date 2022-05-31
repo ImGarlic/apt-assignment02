@@ -14,9 +14,11 @@
 
 void printMenu();
 void newGame(Player* player1, Player* player2, Player* player3, Player* player4, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, char** argv);
-void loadGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt);
+void loadGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, 
+               std::shared_ptr<std::string> curOpt);
 void saveGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::string fileName);
-void playGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, char** argv);
+void playGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, 
+               std::shared_ptr<std::string> curOpt, char** argv);
 void getNewPlayer(Player* player, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, int playerNum);
 void readHand(Player* player, std::string input);
 void printBoard(std::vector<std::vector<Tile*>>* boardPtr);
@@ -110,7 +112,8 @@ int main(int argc, char** argv) {
    return EXIT_SUCCESS;
 }
 
-void playGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt, char** argv) {
+void playGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag,
+               std::shared_ptr<std::string> curOpt, char** argv) {
    Player* curPlayer;
    std::string letter;
    std::vector<Tile*> word;
@@ -159,17 +162,19 @@ void playGame(Player* player1, Player* player2, Player* player3, Player* player4
       do {
          // If user input is a replace command
          if (curOption.find("replace") != std::string::npos) {
-            curPlayer->replaceTile(tileBag, curOption[8]);
-            curOption = "done";
+            // If tile is in hand
+            if (curPlayer->hand->get(curOption[8]) != NULL) {
+               curPlayer->replaceTile(tileBag, curOption[8]);
+               curOption = "done";
+            }
+            else {
+               std::cout << "Tile not in hand" << std::endl;
+               curOption = "next";
+            }
          }
          else if (curOption.find("place Done") != std::string::npos) {
             bool placed;
-            if (*argv[4] == 'y') {
-               placed = curPlayer->placeWord(word, boardPtr, 'y', wordList);
-            }
-            else {
-               placed = curPlayer->placeWord(word, boardPtr, 'n', wordList);
-            }
+            placed = curPlayer->placeWord(word, boardPtr, *argv[4], wordList);
             // If placing word fails, clear board, reset tile pos and append back to player hand
             if (!placed) {
                for (Tile* tile : word) {
@@ -286,7 +291,7 @@ void playGame(Player* player1, Player* player2, Player* player3, Player* player4
       
       std::cout << std::endl;
       bingoCounter = 0;
-      // Check if a turn was not passed
+      // Check if a turn was not a pass
       if (curOption == "done") {
          curPlayer->pass = 0;
       }
@@ -416,7 +421,12 @@ bool betterInputCheck(std::string curOption) {
                if (loc >= 0 && loc <= 14) {
                   return true;
                }
+               std::cout << "Invalid input. Placement must be within the scope of the playing board." << std::endl;
+               return false;
             }
+            std::cout << "Invalid input. Placement must be within the scope of the playing board." << std::endl;
+            return false;
+            
       }
       std::cout << "Invalid input. The correct syntax for <place> is:\n"
                << "> place <letter> at <row><column>"
@@ -572,7 +582,8 @@ void getNewPlayer(Player* player, LinkedList* tileBag, std::shared_ptr<std::stri
       player->createHand(tileBag);
 }
 
-void loadGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag, std::shared_ptr<std::string> curOpt) {
+void loadGame(Player* player1, Player* player2, Player* player3, Player* player4, std::vector<std::vector<Tile*>>* boardPtr, LinkedList* tileBag,
+               std::shared_ptr<std::string> curOpt) {
    std::string fileName;
    std::ifstream saveFile;   
    std::string input;
