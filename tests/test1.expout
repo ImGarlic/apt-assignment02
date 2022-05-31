@@ -11,17 +11,14 @@ Menu
 > 
 Starting a New Game
 
-Enter the number of players (3/4):
-> Enter a name for player 1
+Enter a name for player 1
 > Enter a name for player 2
-> Enter a name for player 3
 > 
 Let's Play!
 
-[31mA[0m, it's your turn
-Score for [31mA[0m: 0
-Score for [36mB[0m: 0
-Score for [33mC[0m: 0
+[0mA[0m, it's your turn
+Score for [0mA[0m: 0
+Score for [0mB[0m: 0
     0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  
   -------------------------------------------------------------
 A |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -41,13 +38,12 @@ N |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 O |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 
 Your hand is
-[31mB-3, E-1, N-1, E-1, I-1, E-1, E-1
+[0mN-1, T-1, M-3, X-8, G-2, D-2, I-1
 [0m> Some commands you can use:
  > place - place a tile on the board
  > replace - swap a tile in your hand
  > pass - skip your turn
  > save - save the current game
  > Quit - exit the game
-> Successfully saved game to saveFiles/test2.save
 > 
 Goodbye

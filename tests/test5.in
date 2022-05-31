@@ -3,8 +3,8 @@ test5
 place J at D5
 place N at E5
 place Done
-place R at D5
-place N at E5
+place R at B3
+place N at B4
 place Done
 save test6
 Quit
